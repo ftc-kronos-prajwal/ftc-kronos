@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp(name="SimpleRegularOpMode")
 public class PrajwalOpMode extends OpMode {
@@ -11,21 +12,21 @@ public class PrajwalOpMode extends OpMode {
 
     @Override
     public void init(){
-        motors[0] = hardwareMap.get("frontLeft");
-        motors[1] = hardwareMap.get("backLeft");
-        motors[2] = hardwareMap.get("frontRight");
-        motors[3] = hardwareMap.get("backRight");
+        motors[0] = hardwareMap.get(DcMotor.class, "frontLeft");
+        motors[1] = hardwareMap.get(DcMotor.class,"backLeft");
+        motors[2] = hardwareMap.get(DcMotor.class,"frontRight");
+        motors[3] = hardwareMap.get(DcMotor.class,"backRight");
 
         for(int i = 0; i < motors.length; i += 1){
             motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motors[i].setDirection(DcMotor.Direction.FORWARD);
         }
 
         System.out.println("init done");
     }
     @Override
     public void init_loop(){
-        g
-        System.out.println("init_loop");
+
     }
     @Override
     public void start(){
@@ -37,6 +38,17 @@ public class PrajwalOpMode extends OpMode {
     }
     @Override
     public void loop(){
-        System.out.println("loop");
+        float rightAmount = gamepad1.left_stick_y, leftAmount = gamepad1.left_stick_y;
+        float xFactor = gamepad1.right_stick_x*2-1;
+        rightAmount *= xFactor;
+        leftAmount *= -xFactor;
+
+        motors[0].setPower(leftAmount);
+        motors[1].setPower(leftAmount);
+        motors[2].setPower(rightAmount);
+        motors[3].setPower(rightAmount);
+
+        telemetry.addData("left", leftAmount);
+        telemetry.addData("right", rightAmount);
     }
 }
