@@ -3,11 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp(name="SimpleRegularOpMode")
 public class PrajwalOpMode extends OpMode {
-    private DcMotor[4] motors;
+    private DcMotor[] motors = new DcMotor[4];
 
 
     @Override
