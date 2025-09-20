@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name="SimpleRegularOpMode")
-public class Prajwal extends OpMode {
+public class PrajwalOpMode extends OpMode {
     private DcMotor[4] motors;
 
 
