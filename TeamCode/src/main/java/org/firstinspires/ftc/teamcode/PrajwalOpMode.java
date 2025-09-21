@@ -40,6 +40,7 @@ public class PrajwalOpMode extends OpMode {
         float rightAmount = gamepad1.left_stick_y, leftAmount = gamepad1.left_stick_y;
         float xFactor = gamepad1.left_stick_x*2-1;
         rightAmount *= xFactor;
+
         leftAmount *= xFactor;
         if(Math.abs(gamepad1.left_stick_y) <= 0.1 && Math.abs(gamepad1.left_stick_x) >= 0.1){
             rightAmount = gamepad1.left_stick_x;
