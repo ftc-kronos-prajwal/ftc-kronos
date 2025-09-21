@@ -44,7 +44,7 @@ public class PrajwalOpMode extends OpMode {
         rightAmount *= gamepad1.left_stick_x;
         leftAmount *= -gamepad1.left_stick_x;
 
-        if(Math.abs(gamepad1.left_stick_y) <= 0.1){
+        if(Math.abs(gamepad1.left_stick_y) <= 0.1 && Math.abs(gamepad1.left_stick_x)){
             rightAmount = gamepad1.left_stick_x;
             leftAmount = -gamepad1.left_stick_x;
         }
