@@ -41,7 +41,10 @@ public class PrajwalOpMode extends OpMode {
         float xFactor = gamepad1.right_stick_x*2-1;
         rightAmount *= xFactor;
         leftAmount *= -xFactor;
-        if()
+        if(Math.abs(gamepad1.right_stick_y) <= 0.1){
+            rightAmount = gamepad1.right_stick_x;
+            leftAmount = -gamepad1.right_stick_x;
+        }
 
         motors[0].setPower(leftAmount);
         motors[1].setPower(leftAmount);
