@@ -37,10 +37,10 @@ public class PrajwalOpMode extends OpMode {
     }
     @Override
     public void loop(){
-        float rightAmount = gamepad1.left_stick_y, leftAmount = gamepad1.left_stick_y;
+        /*float rightAmount = gamepad1.left_stick_y, leftAmount = gamepad1.left_stick_y;
         float xFactor = gamepad1.left_stick_x*2-1;
-        rightAmount *= xFactor;
 
+        rightAmount *= xFactor;
         leftAmount *= xFactor;
         if(Math.abs(gamepad1.left_stick_y) <= 0.1 && Math.abs(gamepad1.left_stick_x) >= 0.1){
             rightAmount = gamepad1.left_stick_x;
@@ -50,7 +50,27 @@ public class PrajwalOpMode extends OpMode {
         motors[0].setPower(leftAmount);
         motors[1].setPower(leftAmount);
         motors[2].setPower(rightAmount);
-        motors[3].setPower(rightAmount);
+        motors[3].setPower(rightAmount);*/
+
+        float rightAmount = gamepad1.left_stick_y - gamepad1.right_stick_x, leftAmount = gamepad1.left_stick_y + gamepad1.right_stick_x;
+
+        if(gamepad1.left_stick_x >= 0.1){
+            motors[0].setPower(leftAmount);
+            motors[1].setPower(-leftAmount);
+            motors[2].setPower(-rightAmount);
+            motors[3].setPower(rightAmount);
+        }else if(gamepad1.left_stick_x <= -0.1){
+            motors[0].setPower(-leftAmount);
+            motors[1].setPower(leftAmount);
+            motors[2].setPower(rightAmount);
+            motors[3].setPower(-rightAmount);
+        }else{
+            motors[0].setPower(leftAmount);
+            motors[1].setPower(leftAmount);
+            motors[2].setPower(rightAmount);
+            motors[3].setPower(rightAmount);
+
+        }
 
         telemetry.addData("left", leftAmount);
         telemetry.addData("right", rightAmount);
