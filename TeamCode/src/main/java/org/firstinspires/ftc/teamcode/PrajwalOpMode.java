@@ -16,9 +16,9 @@ public class PrajwalOpMode extends OpMode {
         motors[2] = hardwareMap.get(DcMotor.class,"frontRight");
         motors[3] = hardwareMap.get(DcMotor.class,"backRight");
 
-        for(int i = 0; i < motors.length; i += 1){
+        for(int i = 0; i < motors.length; i+=1) {
             motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motors[i].setDirection(DcMotor.Direction.FORWARD);
+            motors[i].setDirection((i < 2) ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
         }
 
         System.out.println("init done");
