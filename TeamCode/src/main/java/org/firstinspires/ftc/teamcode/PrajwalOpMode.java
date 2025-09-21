@@ -17,8 +17,8 @@ public class PrajwalOpMode extends OpMode {
 
         for(int i = 0; i < motors.length; i+=1) {
             motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            //motors[i].setDirection((i < 2) ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
-            motors[i].setDirection(DcMotor.Direction.FORWARD);
+            motors[i].setDirection((i < 2) ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
+            //motors[i].setDirection(DcMotor.Direction.FORWARD);
         }
 
         System.out.println("init done");
@@ -38,13 +38,10 @@ public class PrajwalOpMode extends OpMode {
     @Override
     public void loop(){
         float rightAmount = gamepad1.left_stick_y, leftAmount = gamepad1.left_stick_y;
-        /*float xFactor = gamepad1.left_stick_x*2-1;
+        float xFactor = gamepad1.left_stick_x*2-1;
         rightAmount *= xFactor;
-        leftAmount *= -xFactor;*/
-        rightAmount *= gamepad1.left_stick_x;
-        leftAmount *= -gamepad1.left_stick_x;
-
-        if(Math.abs(gamepad1.left_stick_y) <= 0.1 && Math.abs(gamepad1.left_stick_x)){
+        leftAmount *= xFactor;
+        if(Math.abs(gamepad1.left_stick_y) <= 0.1 && Math.abs(gamepad1.left_stick_x) >= 0.1){
             rightAmount = gamepad1.left_stick_x;
             leftAmount = -gamepad1.left_stick_x;
         }
