@@ -4,10 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name="SimpleRegularOpMode")
+@TeleOp(name="PrajwalOpMode")
 public class PrajwalOpMode extends OpMode {
     private DcMotor[] motors = new DcMotor[4];
-
 
     @Override
     public void init(){
@@ -18,7 +17,8 @@ public class PrajwalOpMode extends OpMode {
 
         for(int i = 0; i < motors.length; i+=1) {
             motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motors[i].setDirection((i < 2) ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
+            //motors[i].setDirection((i < 2) ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
+            motors[i].setDirection(DcMotor.Direction.FORWARD);
         }
 
         System.out.println("init done");
@@ -41,6 +41,7 @@ public class PrajwalOpMode extends OpMode {
         float xFactor = gamepad1.right_stick_x*2-1;
         rightAmount *= xFactor;
         leftAmount *= -xFactor;
+        if()
 
         motors[0].setPower(leftAmount);
         motors[1].setPower(leftAmount);
