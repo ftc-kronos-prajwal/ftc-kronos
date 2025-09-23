@@ -38,16 +38,28 @@ public class PrajwalOpMode extends OpMode {
     @Override
     public void loop(){
         float diag1 = gamepad1.left_stick_y + gamepad1.left_stick_x, diag2 = gamepad1.left_stick_y - gamepad1.left_stick_x;
+        float fl = diag1-gamepad1.right_stick_x;
+        float bl = diag2-gamepad1.right_stick_x;
+        float fr = diag2+gamepad1.right_stick_x;
+        float br = diag1+gamepad1.right_stick_x;
 
-        motors[0].setPower(diag1-gamepad1.right_stick_x);
-        motors[1].setPower(diag2-gamepad1.right_stick_x);
-        motors[2].setPower(diag2+gamepad1.right_stick_x);
-        motors[3].setPower(diag1+gamepad1.right_stick_x);
+        float max = Math.max(Math.max(Math.abs(fl), Math.abs(bl)), Math.max(Math.abs(fr), Math.abs(br)));
+        if(max > 1){
+            fl /= max;
+            bl /= max;
+            fr /= max;
+            br /= max;
+        }
 
-        telemetry.addData("fl", diag1-gamepad1.right_stick_x);
-        telemetry.addData("bl", diag2-gamepad1.right_stick_x);
-        telemetry.addData("fr", diag2+gamepad1.right_stick_x);
-        telemetry.addData("br", diag1+gamepad1.right_stick_x);
+        motors[0].setPower(fl);
+        motors[1].setPower(bl);
+        motors[2].setPower(fr);
+        motors[3].setPower(br);
+
+        telemetry.addData("fl", fl);
+        telemetry.addData("bl", bl);
+        telemetry.addData("fr", fr);
+        telemetry.addData("br", br);
         telemetry.update();
     }
 }
