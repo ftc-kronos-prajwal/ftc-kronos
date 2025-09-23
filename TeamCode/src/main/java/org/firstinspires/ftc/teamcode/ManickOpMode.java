@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name = "ManickOpMode")
-public class MecanumDriveExample extends LinearOpMode {
+public class ManickOpMode extends LinearOpMode {
 
    
     private DcMotor frontLeft = null;
