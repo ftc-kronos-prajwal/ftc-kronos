@@ -39,12 +39,15 @@ public class PrajwalOpMode extends OpMode {
     public void loop(){
         float diag1 = gamepad1.left_stick_y + gamepad1.left_stick_x, diag2 = gamepad1.left_stick_y - gamepad1.left_stick_x;
 
-        motors[0].setPower(diag1+gamepad1.right_stick_x);
-        motors[1].setPower(diag2+gamepad1.right_stick_x);
-        motors[2].setPower(diag2-gamepad1.right_stick_x);
-        motors[3].setPower(diag1-gamepad1.right_stick_x);
+        motors[0].setPower(diag1-gamepad1.right_stick_x);
+        motors[1].setPower(diag2-gamepad1.right_stick_x);
+        motors[2].setPower(diag2+gamepad1.right_stick_x);
+        motors[3].setPower(diag1+gamepad1.right_stick_x);
 
-        telemetry.addData("left", diag1);
-        telemetry.addData("right", diag2);
+        telemetry.addData("fl", diag1-gamepad1.right_stick_x);
+        telemetry.addData("bl", diag2-gamepad1.right_stick_x);
+        telemetry.addData("fr", diag2+gamepad1.right_stick_x);
+        telemetry.addData("br", diag1+gamepad1.right_stick_x);
+        telemetry.update();
     }
 }
