@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class ManickOpMode extends LinearOpMode {
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
-//    private DcMotor backLeft = null;
+    private DcMotor backLeft = null;
     private DcMotor backRight = null;
 
     @Override
