@@ -38,6 +38,7 @@ public class PrajwalOpMode extends OpMode {
     @Override
     public void loop(){
         float diag1 = gamepad1.left_stick_y + gamepad1.left_stick_x, diag2 = gamepad1.left_stick_y - gamepad1.left_stick_x;
+
         float fl = diag1-gamepad1.right_stick_x;
         float bl = diag2-gamepad1.right_stick_x;
         float fr = diag2+gamepad1.right_stick_x;
