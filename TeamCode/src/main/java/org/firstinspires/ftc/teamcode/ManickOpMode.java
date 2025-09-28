@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class ManickOpMode extends LinearOpMode {
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;
-    private DcMotor backLeft = null;
+//    private DcMotor backLeft = null;
     private DcMotor backRight = null;
 
     @Override
@@ -45,7 +45,7 @@ public class ManickOpMode extends LinearOpMode {
                     Math.max(Math.abs(frontRightPower), Math.abs(backRightPower)))));
 
             frontLeft.setPower(frontLeftPower / max);
-            backLeft.setPower(backLeftPower / max);
+    //        backLeft.setPower(backLeftPower / max);
             frontRight.setPower(frontRightPower / max);
             backRight.setPower(backRightPower / max);
 
@@ -56,4 +56,3 @@ public class ManickOpMode extends LinearOpMode {
         }
     }
 }
-//test
