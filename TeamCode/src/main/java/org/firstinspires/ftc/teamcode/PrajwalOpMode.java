@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name="PrajwalOpMode")
 public class PrajwalOpMode extends OpMode {
     private DcMotor[] motors = new DcMotor[4];
+    private float diag1, diag2, fl, bl, fr, br, max;
 
     @Override
     public void init(){
@@ -24,14 +25,15 @@ public class PrajwalOpMode extends OpMode {
 
     @Override
     public void loop(){
-        float diag1 = gamepad1.left_stick_y + gamepad1.left_stick_x, diag2 = gamepad1.left_stick_y - gamepad1.left_stick_x;
+        diag1 = gamepad1.left_stick_y + gamepad1.left_stick_x;
+        diag2 = gamepad1.left_stick_y - gamepad1.left_stick_x;
 
-        float fl = diag1-gamepad1.right_stick_x;
-        float bl = diag2-gamepad1.right_stick_x;
-        float fr = diag2+gamepad1.right_stick_x;
-        float br = diag1+gamepad1.right_stick_x;
+        fl = diag1-gamepad1.right_stick_x;
+        bl = diag2-gamepad1.right_stick_x;
+        fr = diag2+gamepad1.right_stick_x;
+        br = diag1+gamepad1.right_stick_x;
 
-        float max = Math.max(Math.max(Math.abs(fl), Math.abs(bl)), Math.max(Math.abs(fr), Math.abs(br)));
+        max = Math.max(Math.max(Math.abs(fl), Math.abs(bl)), Math.max(Math.abs(fr), Math.abs(br)));
         if(max > 1){
             fl /= max;
             bl /= max;
