@@ -20,21 +20,8 @@ public class PrajwalOpMode extends OpMode {
             motors[i].setDirection((i < 2) ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
             //motors[i].setDirection(DcMotor.Direction.FORWARD);
         }
+    }
 
-        System.out.println("init done");
-    }
-    @Override
-    public void init_loop(){
-
-    }
-    @Override
-    public void start(){
-        System.out.println("start");
-    }
-    @Override
-    public void stop(){
-        System.out.println("stop");
-    }
     @Override
     public void loop(){
         float diag1 = gamepad1.left_stick_y + gamepad1.left_stick_x, diag2 = gamepad1.left_stick_y - gamepad1.left_stick_x;
