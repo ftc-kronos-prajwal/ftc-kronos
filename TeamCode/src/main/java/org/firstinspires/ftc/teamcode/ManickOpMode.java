@@ -45,8 +45,8 @@ public class ManickOpMode extends LinearOpMode {
                     Math.max(Math.abs(frontRightPower), Math.abs(backRightPower)))));
 
             frontLeft.setPower(frontLeftPower / max);
-    //        backLeft.setPower(backLeftPower / max);
-            frontRight.setPower(frontRightPower / max);
+            backLeft.setPower(backLeftPower / max);
+            //frontRight.setPower(frontRightPower / max);
             backRight.setPower(backRightPower / max);
 
             
