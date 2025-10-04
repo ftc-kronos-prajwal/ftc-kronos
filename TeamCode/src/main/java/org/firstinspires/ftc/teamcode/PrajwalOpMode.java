@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name="PrajwalOpMode")
 public class PrajwalOpMode extends OpMode {
     private DcMotor[] motors = new DcMotor[4];
-    private float diag1, diag2, fl, bl, fr, br, max, leftX, rightX, leftY/*, rightY*/;
+    private double diag1, diag2, fl, bl, fr, br, max, leftX, rightX, leftY/*, rightY*/;
 
     @Override
     public void init(){
