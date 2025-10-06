@@ -25,10 +25,15 @@ public class PrajwalOpMode extends OpMode {
 
     @Override
     public void loop(){
-        leftX = gamepad1.left_stick_x*gamepad1.left_stick_x*gamepad1.left_stick_x;
+        /*leftX = gamepad1.left_stick_x*gamepad1.left_stick_x*gamepad1.left_stick_x;
         rightX = gamepad1.right_stick_x*gamepad1.right_stick_x*gamepad1.right_stick_x;
-        leftY = gamepad1.left_stick_y*gamepad1.left_stick_y*gamepad1.left_stick_y;
+        leftY = gamepad1.left_stick_y*gamepad1.left_stick_y*gamepad1.left_stick_y;*/
         //rightY = gamepad1.right_stick_y*gamepad1.right_stick_y*gamepad1.right_stick_y;
+
+        leftX = gamepad1.left_stick_x;
+        rightX = gamepad1.right_stick_x;
+        leftY = gamepad1.left_stick_y;
+        //rightY = gamepad1.right_stick_y;
 
         diag1 = leftY + leftX;
         diag2 = leftY - leftX;
