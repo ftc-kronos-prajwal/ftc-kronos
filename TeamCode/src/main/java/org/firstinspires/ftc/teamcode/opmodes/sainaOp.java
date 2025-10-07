@@ -15,7 +15,7 @@ public class sainaOp extends LinearOpMode
     public void runOpMode() throws InterruptedException {
         leftMotor = hardwareMap.dcMotor.get("left_Motor");
         rightMotor = hardwareMap.dcMotor.get("right_Motor");
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor.setDirections(DcMotor.Direction.REVERSE);
         telemetry.addData("Mode", "waiting");
         telemetry.update();
         waitForStart();
@@ -32,9 +32,4 @@ public class sainaOp extends LinearOpMode
             idle();
         }
     }
-
-
-
-
-
 }
