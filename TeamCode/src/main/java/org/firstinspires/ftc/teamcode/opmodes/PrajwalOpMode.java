@@ -6,12 +6,16 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+
+
 @TeleOp(name="PrajwalOpMode")
 public class PrajwalOpMode extends OpMode {
     private DcMotor[] motors = new DcMotor[4];
     private double diag1, diag2, fl, bl, fr, br, max, leftX, rightX, leftY/*, rightY*/;
 
-    bool followPath = false;
+    private boolean followPath = false;
 
     @Override
     public void init(){
