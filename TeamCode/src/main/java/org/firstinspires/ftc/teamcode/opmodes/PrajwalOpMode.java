@@ -4,10 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+
 @TeleOp(name="PrajwalOpMode")
 public class PrajwalOpMode extends OpMode {
     private DcMotor[] motors = new DcMotor[4];
     private double diag1, diag2, fl, bl, fr, br, max, leftX, rightX, leftY/*, rightY*/;
+
+    bool followPath = false;
 
     @Override
     public void init(){
@@ -21,6 +25,14 @@ public class PrajwalOpMode extends OpMode {
             motors[i].setDirection((i < 2) ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
             //motors[i].setDirection(DcMotor.Direction.FORWARD);
         }
+
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
+        Trajectory myTrajectory = drive.trajectoryBuilder(new Pose2d())
+                .strafeRight(0)
+                .forward(12)
+                .build();
+        drive.followTrajectoryAsync(myTrajectory);
     }
 
     @Override
@@ -29,7 +41,6 @@ public class PrajwalOpMode extends OpMode {
         rightX = gamepad1.right_stick_x*gamepad1.right_stick_x*gamepad1.right_stick_x;
         leftY = gamepad1.left_stick_y*gamepad1.left_stick_y*gamepad1.left_stick_y;*/
         //rightY = gamepad1.right_stick_y*gamepad1.right_stick_y*gamepad1.right_stick_y;
-
         leftX = gamepad1.left_stick_x;
         rightX = gamepad1.right_stick_x;
         leftY = gamepad1.left_stick_y;
