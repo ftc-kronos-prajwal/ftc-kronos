@@ -33,9 +33,7 @@ public class PrajwalOpMode extends OpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Trajectory myTrajectory = drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(0)
                 .forward(12)
-                .turn(Math.toRadians(90))
                 .build();
         drive.followTrajectoryAsync(myTrajectory);
     }
