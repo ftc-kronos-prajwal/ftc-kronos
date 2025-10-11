@@ -25,7 +25,8 @@ import java.util.List;
  *        (forward)
  *    /--------------\
  *    |     ____     |
- *    |     ----     |    <- Perpendicular Wheel
+ *    |
+ *   ----     |    <- Perpendicular Wheel
  *    |           || |
  *    |           || |    <- Parallel Wheel
  *    |              |
