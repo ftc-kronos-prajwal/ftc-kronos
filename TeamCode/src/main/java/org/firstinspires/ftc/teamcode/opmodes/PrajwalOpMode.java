@@ -18,8 +18,6 @@ public class PrajwalOpMode extends OpMode {
     SampleMecanumDrive drive;
     Trajectory trajectory;
 
-    private boolean followPath = false;
-
     @Override
     public void init(){
         motors[0] = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -38,7 +36,7 @@ public class PrajwalOpMode extends OpMode {
         trajectory = drive.trajectoryBuilder(new Pose2d())
                 .forward(12)
                 .build();
-        drive.followTrajectoryAsync(myTrajectory);
+        drive.followTrajectoryAsync(trajectory);
     }
 
     @Override
