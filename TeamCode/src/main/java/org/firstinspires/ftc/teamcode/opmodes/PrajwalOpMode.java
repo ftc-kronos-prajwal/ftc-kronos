@@ -15,6 +15,9 @@ public class PrajwalOpMode extends OpMode {
     private DcMotor[] motors = new DcMotor[4];
     private double diag1, diag2, fl, bl, fr, br, max, leftX, rightX, leftY/*, rightY*/;
 
+    SampleMecanumDrive drive;
+    Trajectory trajectory;
+
     private boolean followPath = false;
 
     @Override
@@ -30,9 +33,9 @@ public class PrajwalOpMode extends OpMode {
             //motors[i].setDirection(DcMotor.Direction.FORWARD);
         }
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        drive = new SampleMecanumDrive(hardwareMap);
 
-        Trajectory myTrajectory = drive.trajectoryBuilder(new Pose2d())
+        trajectory = drive.trajectoryBuilder(new Pose2d())
                 .forward(12)
                 .build();
         drive.followTrajectoryAsync(myTrajectory);
@@ -40,6 +43,7 @@ public class PrajwalOpMode extends OpMode {
 
     @Override
     public void loop(){
+        drive.update();
         /*leftX = gamepad1.left_stick_x*gamepad1.left_stick_x*gamepad1.left_stick_x;
         rightX = gamepad1.right_stick_x*gamepad1.right_stick_x*gamepad1.right_stick_x;
         leftY = gamepad1.left_stick_y*gamepad1.left_stick_y*gamepad1.left_stick_y;*/
