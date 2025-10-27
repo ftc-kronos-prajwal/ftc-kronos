@@ -27,10 +27,9 @@ package org.firstinspires.ftc.teamcode.opmodes;/* Copyright (c) 2023 FIRST. All 
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import android.util.Size;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -133,7 +132,9 @@ public class CameraTest extends LinearOpMode {
                 // == CAMERA CALIBRATION ==
                 // If you do not manually specify calibration parameters, the SDK will attempt
                 // to load a predefined calibration for your camera.
-                .setLensIntrinsics(1492.12410874, 1492.12410874, 967.073440639, 526.621652962)
+                //.setLensIntrinsics(1492.12410874, 1492.12410874, 967.073440639, 526.621652962)
+                //.setLensIntrinsics(1731.126171, 1727.102741, 992.4175025, 400.8630539)
+                .setLensIntrinsics(1629.873462, 1612.732819, 976.4911184, 492.420990)
                 // ... these parameters are fx, fy, cx, cy.
 
                 .build();
