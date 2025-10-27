@@ -11,10 +11,11 @@ public class ServoOpMode extends OpMode {
     @Override
     public void init(){
         servo = hardwareMap.get(Servo.class, "servo");
-        servo.setPosition(1.0);
+        servo.setPosition(0);
     }
 
     @Override
     public void loop(){
+        servo.setPosition(gamepad1.left_stick_y/2+0.5);
     }
 }
