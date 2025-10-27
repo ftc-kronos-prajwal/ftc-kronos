@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 @TeleOp(name="IntakeTest")
-class IntakeTest extends OpMode {
+public class IntakeTest extends OpMode {
     DcMotor intake;
     boolean state = false;
     boolean prevState = false;
