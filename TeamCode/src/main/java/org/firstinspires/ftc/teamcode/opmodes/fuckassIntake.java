@@ -21,7 +21,7 @@ public class fuckassIntake extends OpMode {
 
         if (gamepad1.a) {
             intakeMotor.setPower(1.0);
-        } else if (gamepad1.b) {
+        } else if (gamepad1.x) {
             intakeMotor.setPower(-1.0);
         } else {
             intakeMotor.setPower(0);
@@ -29,5 +29,9 @@ public class fuckassIntake extends OpMode {
 
         telemetry.addData("Intake Power", intakeMotor.getPower());
         telemetry.update();
+
+    
+
+
     }
 }
