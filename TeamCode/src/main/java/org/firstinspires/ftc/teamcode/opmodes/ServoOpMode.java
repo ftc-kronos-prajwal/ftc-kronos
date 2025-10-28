@@ -16,6 +16,13 @@ public class ServoOpMode extends OpMode {
 
     @Override
     public void loop(){
-        servo.setPosition(gamepad1.left_stick_y/2+0.5);
-    }
+        if (gamepad1.y) {
+            servo.setPosition(1.0);
+        }
+        else if (gamepad1.a) {
+            servo.setPosition(0);
+        }
+        telemetry.addData("Servo position", servo.getPosition());
+        telemetry.update();
+        }
 }
