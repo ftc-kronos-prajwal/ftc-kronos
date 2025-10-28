@@ -37,6 +37,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
+import android.util.Size;
 
 /*
  * This OpMode illustrates the basics of AprilTag recognition and pose estimation,
