@@ -1,25 +1,34 @@
-`
-private DcMotor intakeMotor;
+package org.firstinspires.ftc.teamcode.opmodes;
 
-@Override
-public void init() {
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
-    intakeMotor = hardwareMap.get(DcMotor.class, "intake");
-    intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    intakeMotor.setDirection(DcMotor.Direction.FORWARD); 
-}
+@TeleOp(name="fuckassIntake")
+public class fuckassIntake extends OpMode {
 
-@Override
-public void loop() {
-    
-    if (gamepad1.a) {
-        intakeMotor.setPower(1.0);  
-    } else if (gamepad1.b) {
-        intakeMotor.setPower(-1.0); 
-    } else {
-        intakeMotor.setPower(0);   
+    private DcMotor intakeMotor;
+
+    @Override
+    public void init() {
+
+        intakeMotor = hardwareMap.get(DcMotor.class, "intake");
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
     }
 
-    telemetry.addData("Intake Power", intakeMotor.getPower());
-    telemetry.update();
+    @Override
+    public void loop() {
+
+        if (gamepad1.a) {
+            intakeMotor.setPower(1.0);
+        } else if (gamepad1.b) {
+            intakeMotor.setPower(-1.0);
+        } else {
+            intakeMotor.setPower(0);
+        }
+
+        telemetry.addData("Intake Power", intakeMotor.getPower());
+        telemetry.update();
+    }
 }
