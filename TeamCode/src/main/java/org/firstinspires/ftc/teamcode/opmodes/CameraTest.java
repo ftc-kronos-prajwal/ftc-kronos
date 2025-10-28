@@ -137,7 +137,6 @@ public class CameraTest extends LinearOpMode {
                 //.setLensIntrinsics(1629.873462, 1612.732819, 976.4911184, 492.4209909)
                 .setLensIntrinsics(1612.409975, 1594.66826, 967.3439456, 495.7939473)
                 // ... these parameters are fx, fy, cx, cy.
-
                 .build();
 
         // Adjust Image Decimation to trade-off detection-range for detection-rate.
