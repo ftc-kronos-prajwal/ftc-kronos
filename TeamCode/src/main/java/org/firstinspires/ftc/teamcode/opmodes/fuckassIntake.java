@@ -16,9 +16,10 @@ public class fuckassIntake extends OpMode {
         intakeMotor = hardwareMap.get(DcMotor.class, "intake");
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);
-        
+
         servo = hardwareMap.get(Servo.class, "servo");
         servo.setPosition(0);
+        servo.setZeroPowerBehavior(Servo.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
