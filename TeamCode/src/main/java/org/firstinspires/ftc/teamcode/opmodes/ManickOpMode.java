@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Hooded_Turret_Control", group = "Turret")
-public class HoodedTurretControl extends LinearOpMode {
+public class ManickOpMode extends LinearOpMode {
 
 
     private Servo hoodServo;
