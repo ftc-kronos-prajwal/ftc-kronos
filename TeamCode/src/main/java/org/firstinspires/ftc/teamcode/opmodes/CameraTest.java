@@ -134,7 +134,8 @@ public class CameraTest extends LinearOpMode {
                 // to load a predefined calibration for your camera.
                 //.setLensIntrinsics(1492.12410874, 1492.12410874, 967.073440639, 526.621652962)
                 //.setLensIntrinsics(1731.126171, 1727.102741, 992.4175025, 400.8630539)
-                .setLensIntrinsics(1629.873462, 1612.732819, 976.4911184, 492.420990)
+                //.setLensIntrinsics(1629.873462, 1612.732819, 976.4911184, 492.4209909)
+                .setLensIntrinsics(1612.409975, 1594.66826, 967.3439456, 495.7939473)
                 // ... these parameters are fx, fy, cx, cy.
 
                 .build();
