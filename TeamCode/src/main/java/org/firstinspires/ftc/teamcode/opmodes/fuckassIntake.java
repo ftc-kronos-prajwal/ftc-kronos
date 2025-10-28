@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name="fuckassIntake")
 public class fuckassIntake extends OpMode {
-
     private DcMotor intakeMotor;
 
     @Override
