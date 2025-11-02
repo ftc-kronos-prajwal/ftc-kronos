@@ -94,6 +94,7 @@ public class PrajwalOpMode extends OpMode {
             intakeMotor.setPower(1.0);
             intakeServo.setPosition(0.25);
             intakeServoPosition = 0.25;
+            lastIntakeTime = currentTime;
         } else if (gamepad1.y || currentTime - lastIntakeTime > 5000) {
             if(intakeServoPosition != 0.5) {
                 intakeServo.setPosition(0.5);
@@ -102,7 +103,6 @@ public class PrajwalOpMode extends OpMode {
             intakeMotor.setPower(0);
         } else {
             intakeMotor.setPower(0);
-            lastIntakeTime = currentTime;
         }
 
         telemetry.addLine("-------INTAKE------");
