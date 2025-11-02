@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @TeleOp(name="PrajwalOpMode")
 public class PrajwalOpMode extends OpMode {
-    private DcMotor[] motors = new DcMotor[4]
+    private DcMotor[] motors = new DcMotor[4];
     private DcMotor intakeMotor;
 
     private Servo intakeServo;

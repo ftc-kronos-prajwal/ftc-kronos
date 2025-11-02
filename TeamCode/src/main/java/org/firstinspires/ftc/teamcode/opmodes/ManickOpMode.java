@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import android.util.Size;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -9,13 +11,10 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import android.util.Size;
 import java.util.List;
 
-@TeleOp(name = "Hooded_Turret_Control", group = "Turret")
-public class Hooded_Turret_Control extends LinearOpMode {
-
-    private static final boolean USE_WEBCAM = true;
+@TeleOp(name = "ManickOpMode")
+public class ManickOpMode extends LinearOpMode {
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
     private Servo hoodServo;
@@ -23,9 +22,12 @@ public class Hooded_Turret_Control extends LinearOpMode {
     private static final double MAX_POS = 0.9;
     private double hoodPos = 0.5;
 
+    private WebcamName camera;
+
     @Override
     public void runOpMode() {
         hoodServo = hardwareMap.get(Servo.class, "hoodServo");
+        camera = hardwareMap.get(WebcamName.class, "Webcam");
         initAprilTag();
 
         telemetry.addLine("Ready — press START to begin");
@@ -65,10 +67,8 @@ public class Hooded_Turret_Control extends LinearOpMode {
                 .build();
 
         VisionPortal.Builder builder = new VisionPortal.Builder();
-        if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam"));
-        }
-        builder.setCameraResolution(new Size(1280, 720));
+        builder.setCameraResolution(new Size(1920, 1080));
+        builder.setCamera(camera);
         builder.addProcessor(aprilTag);
         visionPortal = builder.build();
     }
