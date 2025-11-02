@@ -1,19 +1,24 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 
 @TeleOp(name="PrajwalOpMode")
 public class PrajwalOpMode extends OpMode {
-    private DcMotor[] motors = new DcMotor[4];
-    private double diag1, diag2, fl, bl, fr, br, max, leftX, rightX, leftY/*, rightY*/;
+    private DcMotor[] motors = new DcMotor[4]
+    private DcMotor intakeMotor;
+
+    private Servo intakeServo;
+
+    private double diag1, diag2, fl, bl, fr, br, max, leftX, rightX, leftY/*, rightY*/, intakeServoPosition;
+    private long lastUpdateTime;
 
     SampleMecanumDrive drive;
     Trajectory trajectory;
@@ -24,6 +29,14 @@ public class PrajwalOpMode extends OpMode {
         motors[1] = hardwareMap.get(DcMotor.class,"backLeft");
         motors[2] = hardwareMap.get(DcMotor.class,"frontRight");
         motors[3] = hardwareMap.get(DcMotor.class,"backRight");
+
+
+        intakeMotor = hardwareMap.get(DcMotor.class, "intake");
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
+
+        intakeServo = hardwareMap.get(Servo.class, "servo");
+        intakeServo.setPosition(0);
 
         for(int i = 0; i < motors.length; i+=1) {
             motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -42,14 +55,11 @@ public class PrajwalOpMode extends OpMode {
     @Override
     public void loop(){
         drive.update();
-        /*leftX = gamepad1.left_stick_x*gamepad1.left_stick_x*gamepad1.left_stick_x;
-        rightX = gamepad1.right_stick_x*gamepad1.right_stick_x*gamepad1.right_stick_x;
-        leftY = gamepad1.left_stick_y*gamepad1.left_stick_y*gamepad1.left_stick_y;*/
-        //rightY = gamepad1.right_stick_y*gamepad1.right_stick_y*gamepad1.right_stick_y;
+
+        //drivetrain
         leftX = gamepad1.left_stick_x;
         rightX = gamepad1.right_stick_x;
         leftY = gamepad1.left_stick_y;
-        //rightY = gamepad1.right_stick_y;
 
         diag1 = leftY + leftX;
         diag2 = leftY - leftX;
@@ -72,10 +82,48 @@ public class PrajwalOpMode extends OpMode {
         motors[2].setPower(-fr);
         motors[3].setPower(-br);
 
+        telemetry.addLine("-------DRIVETRAIN------");
         telemetry.addData("fl", fl);
         telemetry.addData("bl", bl);
         telemetry.addData("fr", fr);
         telemetry.addData("br", br);
+
+        //intake
+        if (gamepad1.a) {
+            intakeMotor.setPower(1.0);
+        } else if (gamepad1.x) {
+            intakeMotor.setPower(-1.0);
+        } else {
+            intakeMotor.setPower(0);
+        }
+
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastUpdateTime > 75) {
+            if (gamepad1.y) {
+                intakeServoPosition += 0.05;
+                intakeMotor.setPower(-1.0);
+            }
+            else if (gamepad1.b) {
+                intakeServoPosition -= 0.05;
+                intakeMotor.setPower(-1.0);
+            }
+            else if (gamepad1.a) {
+                intakeMotor.setPower(1.0);
+            }
+            else if (gamepad1.x) {
+                intakeMotor.setPower(-1.0);
+            }
+            else {
+                intakeMotor.setPower(0);
+            }
+
+            intakeServoPosition = Math.max(0, Math.min(1, intakeServoPosition));
+            intakeServo.setPosition(intakeServoPosition);
+            lastUpdateTime = currentTime;
+        }
+        telemetry.addLine("-------INTAKE------");
+        telemetry.addData("servoPosition", intakeServoPosition);
+
         telemetry.update();
     }
 }

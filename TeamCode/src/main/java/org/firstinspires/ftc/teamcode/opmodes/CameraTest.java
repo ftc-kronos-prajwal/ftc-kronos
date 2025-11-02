@@ -27,6 +27,8 @@ package org.firstinspires.ftc.teamcode.opmodes;/* Copyright (c) 2023 FIRST. All 
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import android.util.Size;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -37,7 +39,6 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
-import android.util.Size;
 
 /*
  * This OpMode illustrates the basics of AprilTag recognition and pose estimation,
