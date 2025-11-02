@@ -36,7 +36,7 @@ public class PrajwalOpMode extends OpMode {
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
         intakeServo = hardwareMap.get(Servo.class, "servo");
-        intakeServo.setPosition(0);
+        intakeServo.setPosition(0.5);
 
         for(int i = 0; i < motors.length; i+=1) {
             motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -92,12 +92,12 @@ public class PrajwalOpMode extends OpMode {
         long currentTime = System.currentTimeMillis();
         if (gamepad1.a) {
             intakeMotor.setPower(1.0);
-            intakeServo.setPosition(1);
-            intakeServoPosition = 1;
+            intakeServo.setPosition(0.25);
+            intakeServoPosition = 0.25;
         } else if (gamepad1.y || currentTime - lastIntakeTime > 5000) {
-            if(intakeServoPosition != 0) {
-                intakeServo.setPosition(0);
-                intakeServoPosition = 0;
+            if(intakeServoPosition != 0.5) {
+                intakeServo.setPosition(0.5);
+                intakeServoPosition = 0.5;
             }
             intakeMotor.setPower(0);
         } else {

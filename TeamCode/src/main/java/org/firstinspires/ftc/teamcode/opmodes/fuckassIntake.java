@@ -134,7 +134,7 @@ public class fuckassIntake extends OpMode {
             servoPosition = Math.max(0, Math.min(1, servoPosition));
             servo.setPosition(servoPosition);
             lastUpdateTime = currentTime;
-
+,
         }
         
 
