@@ -89,31 +89,22 @@ public class PrajwalOpMode extends OpMode {
         telemetry.addData("br", br);
 
         //intake
+        long currentTime = System.currentTimeMillis();
         if (gamepad1.a) {
             intakeMotor.setPower(1.0);
-        } else if (gamepad1.x) {
-            intakeMotor.setPower(-1.0);
+            intakeServo.setPosition(1);
+            intakeServoPosition = 1;
+        } else if (gamepad1.y || currentTime - lastIntakeTime > 5000) {
+            if(intakeServoPosition != 0) {
+                intakeServo.setPosition(0);
+                intakeServoPosition = 0;
+            }
+            intakeMotor.setPower(0);
         } else {
             intakeMotor.setPower(0);
+            lastIntakeTime = currentTime;
         }
 
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - lastUpdateTime > 75) {
-            if (gamepad1.y || currentTime - lastIntakeTime > 5000) {
-                intakeServoPosition += 0.05;
-                intakeMotor.setPower(0);
-            }else if (gamepad1.a) {
-                intakeMotor.setPower(1.0);
-                intakeServoPosition -= 0.05;
-            }else{
-                intakeMotor.setPower(0);
-                lastIntakeTime = currentTime;
-            }
-
-            intakeServoPosition = Math.max(0, Math.min(1, intakeServoPosition));
-            intakeServo.setPosition(intakeServoPosition);
-            lastUpdateTime = currentTime;
-        }
         telemetry.addLine("-------INTAKE------");
         telemetry.addData("servoPosition", intakeServoPosition);
 
