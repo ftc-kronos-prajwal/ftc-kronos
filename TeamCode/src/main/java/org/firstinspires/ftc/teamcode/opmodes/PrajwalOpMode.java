@@ -18,7 +18,7 @@ public class PrajwalOpMode extends OpMode {
     private Servo intakeServo;
 
     private double diag1, diag2, fl, bl, fr, br, max, leftX, rightX, leftY/*, rightY*/, intakeServoPosition;
-    private long lastUpdateTime;
+    private long lastUpdateTime, lastIntakeTime;
 
     SampleMecanumDrive drive;
     Trajectory trajectory;
@@ -99,22 +99,15 @@ public class PrajwalOpMode extends OpMode {
 
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastUpdateTime > 75) {
-            if (gamepad1.y) {
+            if (gamepad1.y || currentTime - lastIntakeTime > 5000) {
                 intakeServoPosition += 0.05;
-                intakeMotor.setPower(-1.0);
-            }
-            else if (gamepad1.b) {
-                intakeServoPosition -= 0.05;
-                intakeMotor.setPower(-1.0);
-            }
-            else if (gamepad1.a) {
-                intakeMotor.setPower(1.0);
-            }
-            else if (gamepad1.x) {
-                intakeMotor.setPower(-1.0);
-            }
-            else {
                 intakeMotor.setPower(0);
+            }else if (gamepad1.a) {
+                intakeMotor.setPower(1.0);
+                intakeServoPosition -= 0.05;
+            }else{
+                intakeMotor.setPower(0);
+                lastIntakeTime = currentTime;
             }
 
             intakeServoPosition = Math.max(0, Math.min(1, intakeServoPosition));
