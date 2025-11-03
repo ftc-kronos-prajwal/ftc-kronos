@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 
-@TeleOp(name="PrajwalOpMode")
-public class PrajwalOpMode extends OpMode {
+@TeleOp(name="AnOpMode")
+public class AnOpMode extends OpMode {
     private DcMotor[] motors = new DcMotor[4];
     private DcMotor intakeMotor;
 
@@ -40,7 +40,7 @@ public class PrajwalOpMode extends OpMode {
 
         for(int i = 0; i < motors.length; i+=1) {
             motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motors[i].setDirection((i >= 2) ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
+            motors[i].setDirection((i >= 2) ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
             //motors[i].setDirection(DcMotor.Direction.FORWARD);
         }
 
@@ -57,23 +57,23 @@ public class PrajwalOpMode extends OpMode {
         drive.update();
 
         //drivetrain
-        leftX = -gamepad1.left_stick_x;
+        leftX = gamepad1.left_stick_x;
         rightX = gamepad1.right_stick_x;
-        leftY = -gamepad1.left_stick_y;
+        leftY = gamepad1.left_stick_y;
 
-        /*double angle = Math.atan2(-gamepad1.left_stick_y, -gamepad1.left_stick_x);
+        double angle = Math.atan2(leftY, leftX);
 
         if((angle > 3*Math.PI/8 && angle < 5*Math.PI/8) || (angle < -3*Math.PI/8 && angle > -5*Math.PI/8)){
             leftX = 0;
-        }*/
+        }
 
         diag1 = leftY + leftX;
         diag2 = leftY - leftX;
 
-        fl = leftY + leftX + rightX;
-        bl = leftY - leftX + rightX;
-        fr = leftY - leftX - rightX;
-        br = leftY + leftX - rightX;
+        fl = diag1-rightX;
+        bl = diag2-rightX;
+        fr = diag2+rightX;
+        br = diag1+rightX;
 
         max = Math.max(Math.max(Math.abs(fl), Math.abs(bl)), Math.max(Math.abs(fr), Math.abs(br)));
         if(max > 1){
