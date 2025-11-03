@@ -57,7 +57,7 @@ public class PrajwalOpMode extends OpMode {
         drive.update();
 
         //drivetrain
-        leftX = gamepad1.left_stick_x;
+        leftX = -gamepad1.left_stick_x;
         rightX = gamepad1.right_stick_x;
         leftY = gamepad1.left_stick_y;
 
@@ -67,7 +67,6 @@ public class PrajwalOpMode extends OpMode {
             leftX = 0;
         }
 
-        leftX = -leftX;
         diag1 = leftY + leftX;
         diag2 = leftY - leftX;
 
