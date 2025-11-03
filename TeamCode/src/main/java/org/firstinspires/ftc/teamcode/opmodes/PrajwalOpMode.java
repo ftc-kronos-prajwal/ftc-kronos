@@ -61,6 +61,12 @@ public class PrajwalOpMode extends OpMode {
         rightX = gamepad1.right_stick_x;
         leftY = gamepad1.left_stick_y;
 
+        double angle = Math.atan2(leftY, leftX);
+
+        if((angle > 3*Math.PI/8 && angle < 5*Math.PI/8) || (angle < -3*Math.PI/8 && angle > -5*Math.PI/8)){
+            leftX = 0;
+        }
+
         diag1 = leftY + leftX;
         diag2 = leftY - leftX;
 
