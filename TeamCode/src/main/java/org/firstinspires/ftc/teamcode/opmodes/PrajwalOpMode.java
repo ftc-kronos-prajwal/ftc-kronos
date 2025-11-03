@@ -83,10 +83,10 @@ public class PrajwalOpMode extends OpMode {
             br /= max;
         }
 
-        motors[0].setPower(-fl);
-        motors[1].setPower(-bl);
-        motors[2].setPower(-fr);
-        motors[3].setPower(-br);
+        motors[0].setPower(fl);
+        motors[1].setPower(bl);
+        motors[2].setPower(fr);
+        motors[3].setPower(br);
 
         telemetry.addLine("-------DRIVETRAIN------");
         telemetry.addData("fl", fl);
