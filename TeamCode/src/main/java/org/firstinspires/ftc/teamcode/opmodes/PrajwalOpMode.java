@@ -40,7 +40,7 @@ public class PrajwalOpMode extends OpMode {
 
         for(int i = 0; i < motors.length; i+=1) {
             motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motors[i].setDirection((i >= 2) ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
+            motors[i].setDirection((i >= 2) ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
             //motors[i].setDirection(DcMotor.Direction.FORWARD);
         }
 
@@ -57,7 +57,7 @@ public class PrajwalOpMode extends OpMode {
         drive.update();
 
         //drivetrain
-        leftX = gamepad1.left_stick_x;
+        leftX = -gamepad1.left_stick_x;
         rightX = gamepad1.right_stick_x;
         leftY = gamepad1.left_stick_y;
 
