@@ -12,47 +12,29 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 import java.util.Arrays;
 import java.util.List;
 
-/*
- * Sample tracking wheel localizer implementation assuming the standard configuration:
- *
- *    ^
- *    |
- *    | ( x direction)
- *    |
- *    v
- *    <----( y direction )---->
-
- *        (forward)
- *    /--------------\
- *    |     ____     |
- *    |
- *   ----     |    <- Perpendicular Wheel
- *    |           || |
- *    |           || |    <- Parallel Wheel
- *    |              |
- *    |              |
- *    \--------------/
- *
- */
 public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double TICKS_PER_REV = 4096;
     public static double WHEEL_RADIUS = 0.6889764; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double PARALLEL_X = -7; // X is the up and down direction
-    public static double PARALLEL_Y = -1.375; // Y is the strafe direction
+    public static double PARALLEL_X = -7;
+    public static double PARALLEL_Y = -1.375;
 
     public static double PERPENDICULAR_X = -7;
     public static double PERPENDICULAR_Y = 1.625;
 
-    public static double X_MULTIPLIER = 72/71.6295; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 72/72.045; // Multiplier in
-    // Parallel/Perpendicular to the forward axis
-    // Parallel wheel is parallel to the forward axis
-    // Perpendicular is perpendicular to the forward axis
-    private Encoder parallelEncoder, perpendicularEncoder;
+    public static double X_MULTIPLIER = 72/71.6295;
+    public static double Y_MULTIPLIER = 72/72.045;
 
+    private Encoder parallelEncoder, perpendicularEncoder;
     private SampleMecanumDrive drive;
+
+    // --- Smoothing variables ---
+    private double lastVParallel = 0;
+    private double lastVPerp = 0;
+
+    // lower = smoother. 0.2 works well for most bots
+    private static final double ALPHA = 0.2;
 
     public TwoWheelTrackingLocalizer(HardwareMap hardwareMap, SampleMecanumDrive drive) {
         super(Arrays.asList(
@@ -65,8 +47,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "vertical"));
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "horizontal"));
 
-        //parallelEncoder.setDirection(Encoder.Direction.REVERSE);
-        // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
+        // If one wheel reports negative distance, reverse it here
+        // parallelEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
     public static double encoderTicksToInches(double ticks) {
@@ -95,13 +77,14 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     @NonNull
     @Override
     public List<Double> getWheelVelocities() {
-        // TODO: If your encoder velocity can exceed 32767 counts / second (such as the REV Through Bore and other
-        //  competing magnetic encoders), change Encoder.getRawVelocity() to Encoder.getCorrectedVelocity() to enable a
-        //  compensation method
+        // ⬇ Use corrected velocity to avoid overflow & reduce noise
+        double rawParallel = encoderTicksToInches(parallelEncoder.getCorrectedVelocity()) * X_MULTIPLIER;
+        double rawPerp = encoderTicksToInches(perpendicularEncoder.getCorrectedVelocity()) * Y_MULTIPLIER;
 
-        return Arrays.asList(
-                encoderTicksToInches(parallelEncoder.getRawVelocity()) * X_MULTIPLIER,
-                encoderTicksToInches(perpendicularEncoder.getRawVelocity()) * Y_MULTIPLIER
-        );
+        // ⬇ Exponential smoothing to remove stop spikes
+        lastVParallel = ALPHA * rawParallel + (1 - ALPHA) * lastVParallel;
+        lastVPerp     = ALPHA * rawPerp     + (1 - ALPHA) * lastVPerp;
+
+        return Arrays.asList(lastVParallel, lastVPerp);
     }
 }
