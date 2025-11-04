@@ -67,7 +67,7 @@ public class PrajwalOpMode extends OpMode {
             leftX = 0;
         }*/
 
-        diag1 = leftY + leftX;
+        /*diag1 = leftY + leftX;
         diag2 = leftY - leftX;
 
         fl = leftY + leftX + rightX;
@@ -81,6 +81,30 @@ public class PrajwalOpMode extends OpMode {
             bl /= max;
             fr /= max;
             br /= max;
+        }*/
+
+        double y = -gamepad1.left_stick_y;  // Forward/backward (inverted)
+        double x = gamepad1.left_stick_x;   // Strafe left/right
+        double rx = gamepad1.right_stick_x; // Rotation
+
+        // Calculate motor powers using mecanum drive kinematics
+        double fl = y + x + rx;
+        double fr = y - x - rx;
+        double bl = y - x + rx;
+        double br = y + x - rx;
+
+        // Find the maximum power
+        double maxPower = Math.max(
+                Math.max(Math.abs(fl), Math.abs(fr)),
+                Math.max(Math.abs(bl), Math.abs(br))
+        );
+
+        // Normalize powers if any exceed 1.0
+        if (maxPower > 1.0) {
+            fl /= maxPower;
+            fr /= maxPower;
+            bl /= maxPower;
+            br /= maxPower;
         }
 
         motors[0].setPower(fl);
