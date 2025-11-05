@@ -77,11 +77,9 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     @NonNull
     @Override
     public List<Double> getWheelVelocities() {
-        // ⬇ Use corrected velocity to avoid overflow & reduce noise
         double rawParallel = encoderTicksToInches(parallelEncoder.getCorrectedVelocity()) * X_MULTIPLIER;
         double rawPerp = encoderTicksToInches(perpendicularEncoder.getCorrectedVelocity()) * Y_MULTIPLIER;
 
-        // ⬇ Exponential smoothing to remove stop spikes
         lastVParallel = ALPHA * rawParallel + (1 - ALPHA) * lastVParallel;
         lastVPerp     = ALPHA * rawPerp     + (1 - ALPHA) * lastVPerp;
 
