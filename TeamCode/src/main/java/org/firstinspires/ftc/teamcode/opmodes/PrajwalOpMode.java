@@ -144,6 +144,8 @@ public class PrajwalOpMode extends OpMode {
                 intakeServo.setPosition(0);
                 intakeServoPosition = 0;
             }
+        }else{
+            intakeMotor.setPower(0);
         }
 
         telemetry.addLine("-------INTAKE------");
