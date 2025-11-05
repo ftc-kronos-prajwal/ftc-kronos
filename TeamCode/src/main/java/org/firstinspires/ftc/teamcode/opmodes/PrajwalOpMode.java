@@ -133,12 +133,10 @@ public class PrajwalOpMode extends OpMode {
             }
             intakeMotor.setPower(0);
         } else if (gamepad1.x){
+            intakeMotor.setPower(-1.0);
             if(currentTime - lastIntakeTime >= 250){
-                intakeMotor.setPower(0);
                 intakeServo.setPosition(0);
                 intakeServoPosition = 0;
-            }else {
-                intakeMotor.setPower(-1.0);
             }
             if(intakeServoPosition != 0.3 && intakeServoPosition != 0) {
                 lastIntakeTime = currentTime;
