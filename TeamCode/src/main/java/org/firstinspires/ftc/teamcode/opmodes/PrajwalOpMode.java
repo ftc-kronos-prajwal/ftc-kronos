@@ -36,7 +36,7 @@ public class PrajwalOpMode extends OpMode {
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
         intakeServo = hardwareMap.get(Servo.class, "servo");
-        intakeServo.setPosition(0.7);
+        intakeServo.setPosition(0.6);
 
         for(int i = 0; i < motors.length; i+=1) {
             motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
