@@ -40,8 +40,8 @@ public class PrajwalOpMode extends OpMode {
 
         for(int i = 0; i < motors.length; i+=1) {
             motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motors[i].setDirection((i >= 2) ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
-            //motors[i].setDirection(DcMotor.Direction.FORWARD);
+            //motors[i].setDirection((i >= 2) ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
+            motors[i].setDirection(DcMotor.Direction.FORWARD);
         }
 
         drive = new SampleMecanumDrive(hardwareMap);
@@ -83,7 +83,7 @@ public class PrajwalOpMode extends OpMode {
             br /= max;
         }*/
 
-        double y = -gamepad1.left_stick_y;  // Forward/backward (inverted)
+        double y = gamepad1.left_stick_y;  // Forward/backward (inverted)
         double x = gamepad1.left_stick_x;   // Strafe left/right
         double rx = gamepad1.right_stick_x; // Rotation
 
