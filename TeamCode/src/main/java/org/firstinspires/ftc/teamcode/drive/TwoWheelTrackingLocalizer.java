@@ -77,13 +77,12 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     @NonNull
     @Override
     public List<Double> getWheelVelocities() {
-        // TODO: If your encoder velocity can exceed 32767 counts / second (such as the REV Through Bore and other
-        //  competing magnetic encoders), change Encoder.getRawVelocity() to Encoder.getCorrectedVelocity() to enable a
-        //  compensation method
+        double rawParallel = encoderTicksToInches(parallelEncoder.getCorrectedVelocity()) * X_MULTIPLIER;
+        double rawPerp = encoderTicksToInches(perpendicularEncoder.getCorrectedVelocity()) * Y_MULTIPLIER;
 
-        return Arrays.asList(
-                encoderTicksToInches(parallelEncoder.getRawVelocity()),
-                encoderTicksToInches(perpendicularEncoder.getRawVelocity())
-        );
+        lastVParallel = ALPHA * rawParallel + (1 - ALPHA) * lastVParallel;
+        lastVPerp     = ALPHA * rawPerp     + (1 - ALPHA) * lastVPerp;
+
+        return Arrays.asList(lastVParallel, lastVPerp);
     }
 }
