@@ -40,21 +40,21 @@ public class PrajwalOpMode extends OpMode {
 
         for(int i = 0; i < motors.length; i+=1) {
             motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            //motors[i].setDirection((i >= 2) ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
-            motors[i].setDirection(DcMotor.Direction.FORWARD);
+            motors[i].setDirection((i >= 2) ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
+            //motors[i].setDirection(DcMotor.Direction.FORWARD);
         }
 
-        drive = new SampleMecanumDrive(hardwareMap);
+        /*drive = new SampleMecanumDrive(hardwareMap);
 
-        trajectory = drive.trajectoryBuilder(new Pose2d())
-                .forward(12)
+        //trajectory = drive.trajectoryBuilder(new Pose2d())
+        //        .forward(12)
                 .build();
-        drive.followTrajectoryAsync(trajectory);
+        drive.followTrajectoryAsync(trajectory);*/
     }
 
     @Override
     public void loop(){
-        drive.update();
+        //drive.update();
 
         //drivetrain
         leftX = -gamepad1.left_stick_x;
@@ -85,7 +85,7 @@ public class PrajwalOpMode extends OpMode {
 
         double y = gamepad1.left_stick_y;  // Forward/backward (inverted)
         double x = gamepad1.left_stick_x;   // Strafe left/right
-        double rx = gamepad1.right_stick_x; // Rotation
+        double rx = -gamepad1.right_stick_x; // Rotation
 
         // Calculate motor powers using mecanum drive kinematics
         double fl = y + x + rx;
