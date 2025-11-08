@@ -26,7 +26,7 @@ public class ManickOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        hoodServo = hardwareMap.get(Servo.class, "hoodServo");
+        hoodServo = hardwareMap.get(Servo.class, "hoodservo");
         camera = hardwareMap.get(WebcamName.class, "Webcam");
         initAprilTag();
 
