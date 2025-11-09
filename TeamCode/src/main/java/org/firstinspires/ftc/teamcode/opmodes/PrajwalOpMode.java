@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -57,7 +56,7 @@ public class PrajwalOpMode extends OpMode {
         //drive.update();
 
         //drivetrain
-        leftX = -gamepad1.left_stick_x;
+        leftX = gamepad1.left_stick_x;
         rightX = gamepad1.right_stick_x;
         leftY = -gamepad1.left_stick_y;
 
