@@ -20,9 +20,9 @@ public class TurretRotation extends OpMode {
     public void loop() {
         double power = 0.0;
         if (gamepad1.right_bumper) {
-            power = 0.6;
+            power = 1.0;
         } else if (gamepad1.left_bumper){
-            power = -0.6;
+            power = -1.0;
         }
         leftServo.setPower(power);
         rightServo.setPower(power);
