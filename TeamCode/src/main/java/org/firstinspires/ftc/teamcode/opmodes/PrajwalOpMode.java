@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-
 @TeleOp(name="PrajwalOpMode")
 public class PrajwalOpMode extends OpMode {
     private DcMotor[] motors = new DcMotor[4];
@@ -28,6 +27,14 @@ public class PrajwalOpMode extends OpMode {
 
     SampleMecanumDrive drive;
     TrajectorySequence trajectory;
+
+    private double[] rot(double x, double y, double theta) {
+        double[] res = new double[2];
+        double cos = Math.cos(theta), sin = Math.sin(theta);
+        res[0] = x * cos - y * sin;
+        res[1] = x * sin + y * cos;
+        return res;
+    }
 
     @Override
     public void init(){
@@ -75,7 +82,6 @@ public class PrajwalOpMode extends OpMode {
 
         if(!drive.isBusy()) {
             //turret
-
             currentTime = System.currentTimeMillis();
             if(currentTime - lastUpdateTime > 50) {
                 if (gamepad1.left_bumper) {
@@ -167,8 +173,9 @@ public class PrajwalOpMode extends OpMode {
 
             //drivetrain
 
-            double y = -gamepad1.left_stick_y;  // Forward/backward (inverted)
-            double x = gamepad1.left_stick_x;   // Strafe left/right
+            double[] rotated = rot(gamepad1.left_stick_x, gamepad1.left_stick_y, drive.getPoseEstimate().getHeading());
+            double y = -rotated[1];  // Forward/backward (inverted)
+            double x = rotated[0];   // Strafe left/right
             double rx = gamepad1.right_stick_x; // Rotation
 
             // Calculate motor powers using mecanum drive kinematics
