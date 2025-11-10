@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -43,17 +44,17 @@ public class PrajwalOpMode extends OpMode {
             //motors[i].setDirection(DcMotor.Direction.FORWARD);
         }
 
-        /*drive = new SampleMecanumDrive(hardwareMap);
+        drive = new SampleMecanumDrive(hardwareMap);
 
-        //trajectory = drive.trajectoryBuilder(new Pose2d())
-        //        .forward(12)
+        trajectory = drive.trajectoryBuilder(new Pose2d())
+                .forward(12)
                 .build();
-        drive.followTrajectoryAsync(trajectory);*/
+        drive.followTrajectoryAsync(trajectory);
     }
 
     @Override
     public void loop(){
-        //drive.update();
+        drive.update();
 
         //drivetrain
         leftX = gamepad1.left_stick_x;
