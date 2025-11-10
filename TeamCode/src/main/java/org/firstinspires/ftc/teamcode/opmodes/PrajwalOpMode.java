@@ -71,12 +71,6 @@ public class PrajwalOpMode extends OpMode {
     public void loop(){
         //drive.update();
 
-        telemetry.addData("l1", gamepad1.left_bumper);
-        telemetry.addData("r1", gamepad1.right_bumper);
-        telemetry.addData("l2", gamepad1.left_trigger);
-        telemetry.addData("r2", gamepad1.right_trigger);
-        telemetry.update();
-
         if(!drive.isBusy()) {
             //turret
 
