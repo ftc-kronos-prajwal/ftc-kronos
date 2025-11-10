@@ -19,10 +19,10 @@ public class TurretRotation extends OpMode {
     @Override
     public void loop() {
         double power = 0.0;
-        if (gamepad1.right_bumper) {
-            power = 1.0;
-        } else if (gamepad1.left_bumper){
-            power = -1.0;
+        if (gamepad1.right_trigger > 0) {
+            power = gamepad1.right_trigger;
+        } else if (gamepad1.left_trigger > 0){
+            power = gamepad1.left_trigger;
         }
         leftServo.setPower(power);
         rightServo.setPower(power);
