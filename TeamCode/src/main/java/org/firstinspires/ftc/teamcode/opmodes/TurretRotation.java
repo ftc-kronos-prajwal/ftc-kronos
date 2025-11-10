@@ -22,7 +22,7 @@ public class TurretRotation extends OpMode {
         if (gamepad1.right_trigger > 0) {
             power = gamepad1.right_trigger;
         } else if (gamepad1.left_trigger > 0){
-            power = gamepad1.left_trigger;
+            power = -gamepad1.left_trigger;
         }
         leftServo.setPower(power);
         rightServo.setPower(power);
