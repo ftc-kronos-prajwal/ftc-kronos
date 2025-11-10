@@ -71,6 +71,12 @@ public class PrajwalOpMode extends OpMode {
     public void loop(){
         //drive.update();
 
+        telemetry.addData("l1", gamepad1.left_bumper);
+        telemetry.addData("r1", gamepad1.right_bumper);
+        telemetry.addData("l2", gamepad1.left_trigger);
+        telemetry.addData("r2", gamepad1.right_trigger);
+        telemetry.update();
+
         if(!drive.isBusy()) {
             //turret
 
@@ -132,7 +138,7 @@ public class PrajwalOpMode extends OpMode {
                 double prev = turretLaunchPower;
 
                 if (gamepad1.right_trigger > 0) {
-                    if (turretLaunchPower == 0) {
+                    if (turretLaunchPower <= 0) {
                         turretLaunchPower = 0.1;
                     }
                     turretLaunchPower *= (gamepad1.right_trigger + 1);
@@ -143,7 +149,7 @@ public class PrajwalOpMode extends OpMode {
                         turretLaunchPower = gamepad1.right_trigger;
                     }
                 } else if (gamepad1.left_trigger > 0) {
-                    if (turretLaunchPower == 0) {
+                    if (turretLaunchPower >= 0) {
                         turretLaunchPower = -0.1;
                     }
                     turretLaunchPower *= (gamepad1.left_trigger + 1);
@@ -153,6 +159,8 @@ public class PrajwalOpMode extends OpMode {
                     if (turretLaunchPower < -gamepad1.left_trigger) {
                         turretLaunchPower = -gamepad1.left_trigger;
                     }
+                }else{
+                    turretLaunchPower = 0;
                 }
 
                 if (turretLaunchPower > 1.0) turretLaunchPower = 1.0;
