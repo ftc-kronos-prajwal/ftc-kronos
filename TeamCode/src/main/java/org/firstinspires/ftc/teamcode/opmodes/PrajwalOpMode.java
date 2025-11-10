@@ -65,9 +65,9 @@ public class PrajwalOpMode extends OpMode {
 
         if(!drive.isBusy()) {
             //drivetrain
-            leftX = gamepad1.left_stick_x;
-            rightX = gamepad1.right_stick_x;
-            leftY = -gamepad1.left_stick_y;
+            leftX = -gamepad1.left_stick_x;
+            rightX = -gamepad1.right_stick_x;
+            leftY = gamepad1.left_stick_y;
 
             /*double angle = Math.atan2(-gamepad1.left_stick_y, -gamepad1.left_stick_x);
 
