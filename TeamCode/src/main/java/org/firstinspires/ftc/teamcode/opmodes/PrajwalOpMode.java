@@ -46,8 +46,10 @@ public class PrajwalOpMode extends OpMode {
 
         drive = new SampleMecanumDrive(hardwareMap);
 
-        trajectory = drive.trajectoryBuilder(new Pose2d())
-                .forward(24)
+        Pose2d pose = new Pose2d();
+        drive.setPoseEstimate(pose);
+        trajectory = drive.trajectoryBuilder(pose)
+                .forward(24.0)
                 .build();
         drive.followTrajectory(trajectory);
     }
