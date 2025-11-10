@@ -75,85 +75,89 @@ public class PrajwalOpMode extends OpMode {
             //turret
 
             currentTime = System.currentTimeMillis();
-            if(gamepad1.left_bumper){
-                if(lastTurretRotDir != 1){
+            if(lastUpdateTime - currentTime > 50) {
+                if (gamepad1.left_bumper) {
+                    if (lastTurretRotDir != 1) {
+                        turretRotPower = 0;
+                        lastTurretRotDir = 1;
+                        lastTurretRotLogged = false;
+                    }
+                    if (!pLBState && turretRotPower != 0) {
+                        turretRotPower += 0.5;
+                        if (turretRotPower > 1.0) turretRotPower = 1.0;
+                        if (turretRotPower < -1.0) turretRotPower = -1.0;
+                        pLBState = true;
+                        pRBState = false;
+                    }
+                    if (lastTurretRotLogged) {
+                        turretRotPower += ((double) (lastTurretRotTime - currentTime)) / 500.0;
+                        if (turretRotPower > 1.0) turretRotPower = 1.0;
+                        if (turretRotPower < -1.0) turretRotPower = -1.0;
+                    }
+                    lastTurretRotTime = currentTime;
+                    lastTurretRotLogged = true;
+                } else if (gamepad1.right_bumper) {
+                    if (lastTurretRotDir != -1) {
+                        turretRotPower = 0;
+                        lastTurretRotDir = -1;
+                        lastTurretRotLogged = false;
+                    }
+                    if (!pRBState && turretRotPower != 0) {
+                        turretRotPower -= 0.5;
+                        if (turretRotPower > 1.0) turretRotPower = 1.0;
+                        if (turretRotPower < -1.0) turretRotPower = -1.0;
+                        pLBState = false;
+                        pRBState = true;
+                    }
+                    if (lastTurretRotLogged) {
+                        turretRotPower -= ((double) (lastTurretRotTime - currentTime)) / 500.0;
+                        if (turretRotPower > 1.0) turretRotPower = 1.0;
+                        if (turretRotPower < -1.0) turretRotPower = -1.0;
+                    }
+                    lastTurretRotTime = currentTime;
+                    lastTurretRotLogged = true;
+                } else {
                     turretRotPower = 0;
-                    lastTurretRotDir = 1;
+                    lastTurretRotDir = 0;
                     lastTurretRotLogged = false;
-                }
-                if(!pLBState && turretRotPower != 0){
-                    turretRotPower += 0.5;
-                    if(turretRotPower > 1.0) turretRotPower = 1.0;
-                    if(turretRotPower < -1.0) turretRotPower = -1.0;
-                    pLBState = true;
+                    pLBState = false;
                     pRBState = false;
                 }
-                if(lastTurretRotLogged){
-                    turretRotPower += ((double) (lastTurretRotTime - currentTime))/500.0;
-                    if(turretRotPower > 1.0) turretRotPower = 1.0;
-                    if(turretRotPower < -1.0) turretRotPower = -1.0;
-                }
-                lastTurretRotTime = currentTime;
-                lastTurretRotLogged = true;
-            }else if(gamepad1.right_bumper){
-                if(lastTurretRotDir != -1){
-                    turretRotPower = 0;
-                    lastTurretRotDir = -1;
-                    lastTurretRotLogged = false;
-                }
-                if(!pRBState && turretRotPower != 0){
-                    turretRotPower -= 0.5;
-                    if(turretRotPower > 1.0) turretRotPower = 1.0;
-                    if(turretRotPower < -1.0) turretRotPower = -1.0;
-                    pLBState = false;
-                    pRBState = true;
-                }
-                if(lastTurretRotLogged){
-                    turretRotPower -= ((double) (lastTurretRotTime - currentTime))/500.0;
-                    if(turretRotPower > 1.0) turretRotPower = 1.0;
-                    if(turretRotPower < -1.0) turretRotPower = -1.0;
-                }
-                lastTurretRotTime = currentTime;
-                lastTurretRotLogged = true;
-            }else{
-                turretRotPower = 0;
-                lastTurretRotDir = 0;
-                lastTurretRotLogged = false;
-                pLBState = false;
-                pRBState = false;
             }
 
             leftServo.setPower(turretRotPower);
             rightServo.setPower(turretRotPower);
 
-            double prev = turretLaunchPower;
+            if(currentTime - lastUpdateTime > 50) {
+                double prev = turretLaunchPower;
 
-            if(gamepad1.right_trigger > 0) {
-                if(turretLaunchPower == 0){
-                    turretLaunchPower = 0.1;
+                if (gamepad1.right_trigger > 0) {
+                    if (turretLaunchPower == 0) {
+                        turretLaunchPower = 0.1;
+                    }
+                    turretLaunchPower *= (gamepad1.right_trigger + 1);
+                    if (turretLaunchPower > prev + gamepad1.right_trigger / 10) {
+                        turretLaunchPower = prev + gamepad1.right_trigger / 10;
+                    }
+                    if (turretLaunchPower > gamepad1.right_trigger) {
+                        turretLaunchPower = gamepad1.right_trigger;
+                    }
+                } else if (gamepad1.left_trigger > 0) {
+                    if (turretLaunchPower == 0) {
+                        turretLaunchPower = -0.1;
+                    }
+                    turretLaunchPower *= (gamepad1.left_trigger + 1);
+                    if (turretLaunchPower < prev - gamepad1.left_trigger / 10) {
+                        turretLaunchPower = prev - gamepad1.left_trigger / 10;
+                    }
+                    if (turretLaunchPower < -gamepad1.left_trigger) {
+                        turretLaunchPower = -gamepad1.left_trigger;
+                    }
                 }
-                turretLaunchPower *= (gamepad1.right_trigger + 1);
-                if(turretLaunchPower > prev + gamepad1.right_trigger/10){
-                    turretLaunchPower = prev + gamepad1.right_trigger/10;
-                }
-                if(turretLaunchPower > gamepad1.right_trigger){
-                    turretLaunchPower = gamepad1.right_trigger;
-                }
-            }else if(gamepad1.left_trigger > 0){
-                if(turretLaunchPower == 0){
-                    turretLaunchPower = -0.1;
-                }
-                turretLaunchPower *= (gamepad1.left_trigger + 1);
-                if(turretLaunchPower < prev - gamepad1.left_trigger/10){
-                    turretLaunchPower = prev - gamepad1.left_trigger/10;
-                }
-                if(turretLaunchPower < -gamepad1.left_trigger){
-                    turretLaunchPower = -gamepad1.left_trigger;
-                }
+
+                if (turretLaunchPower > 1.0) turretLaunchPower = 1.0;
+                if (turretLaunchPower < -1.0) turretLaunchPower = -1.0;
             }
-
-            if(turretLaunchPower > 1.0) turretLaunchPower = 1.0;
-            if(turretLaunchPower < -1.0) turretLaunchPower = -1.0;
 
             turretLaunchMotor.setPower(turretLaunchPower);
 
@@ -223,10 +227,7 @@ public class PrajwalOpMode extends OpMode {
                 intakeMotor.setPower(0);
             }
 
-            telemetry.addLine("-------INTAKE------");
-            telemetry.addData("servoPosition", intakeServoPosition);
-
-            telemetry.update();
+            if(currentTime - lastUpdateTime > 50) lastUpdateTime = System.currentTimeMillis();
         }
     }
 }
