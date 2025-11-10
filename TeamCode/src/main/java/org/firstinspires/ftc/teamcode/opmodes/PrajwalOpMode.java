@@ -81,7 +81,7 @@ public class PrajwalOpMode extends OpMode {
             //turret
 
             currentTime = System.currentTimeMillis();
-            if(lastUpdateTime - currentTime > 50) {
+            if(currentTime - lastUpdateTime > 50) {
                 if (gamepad1.left_bumper) {
                     if (lastTurretRotDir != 1) {
                         turretRotPower = 0;
