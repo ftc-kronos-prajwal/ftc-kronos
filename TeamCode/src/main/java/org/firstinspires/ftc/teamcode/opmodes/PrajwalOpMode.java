@@ -96,7 +96,7 @@ public class PrajwalOpMode extends OpMode {
                         pRBState = false;
                     }
                     if (lastTurretRotLogged) {
-                        turretRotPower += ((double) (lastTurretRotTime - currentTime)) / 500.0;
+                        turretRotPower += ((double) (currentTime - lastTurretRotTime)) / 500.0;
                         if (turretRotPower > 1.0) turretRotPower = 1.0;
                         if (turretRotPower < -1.0) turretRotPower = -1.0;
                     }
@@ -116,7 +116,7 @@ public class PrajwalOpMode extends OpMode {
                         pRBState = true;
                     }
                     if (lastTurretRotLogged) {
-                        turretRotPower -= ((double) (lastTurretRotTime - currentTime)) / 500.0;
+                        turretRotPower -= ((double) (currentTime - lastTurretRotTime)) / 500.0;
                         if (turretRotPower > 1.0) turretRotPower = 1.0;
                         if (turretRotPower < -1.0) turretRotPower = -1.0;
                     }
