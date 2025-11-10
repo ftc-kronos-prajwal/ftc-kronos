@@ -51,12 +51,12 @@ public class PrajwalOpMode extends OpMode {
         trajectory = drive.trajectoryBuilder(pose)
                 .forward(24.0)
                 .build();
-        drive.followTrajectory(trajectory);
+        drive.followTrajectoryAsync(trajectory);
     }
 
     @Override
     public void loop(){
-        //drive.update();
+        drive.update();
 
         if(!drive.isBusy()) {
             //drivetrain
