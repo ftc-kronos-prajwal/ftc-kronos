@@ -56,100 +56,102 @@ public class PrajwalOpMode extends OpMode {
     public void loop(){
         drive.update();
 
-        //drivetrain
-        leftX = gamepad1.left_stick_x;
-        rightX = gamepad1.right_stick_x;
-        leftY = -gamepad1.left_stick_y;
+        if(!drive.isBusy()) {
+            //drivetrain
+            leftX = gamepad1.left_stick_x;
+            rightX = gamepad1.right_stick_x;
+            leftY = -gamepad1.left_stick_y;
 
-        /*double angle = Math.atan2(-gamepad1.left_stick_y, -gamepad1.left_stick_x);
+            /*double angle = Math.atan2(-gamepad1.left_stick_y, -gamepad1.left_stick_x);
 
-        if((angle > 3*Math.PI/8 && angle < 5*Math.PI/8) || (angle < -3*Math.PI/8 && angle > -5*Math.PI/8)){
-            leftX = 0;
-        }*/
+            if((angle > 3*Math.PI/8 && angle < 5*Math.PI/8) || (angle < -3*Math.PI/8 && angle > -5*Math.PI/8)){
+                leftX = 0;
+            }*/
 
-        /*diag1 = leftY + leftX;
-        diag2 = leftY - leftX;
+            /*diag1 = leftY + leftX;
+            diag2 = leftY - leftX;
 
-        fl = leftY + leftX + rightX;
-        bl = leftY - leftX + rightX;
-        fr = leftY - leftX - rightX;
-        br = leftY + leftX - rightX;
+            fl = leftY + leftX + rightX;
+            bl = leftY - leftX + rightX;
+            fr = leftY - leftX - rightX;
+            br = leftY + leftX - rightX;
 
-        max = Math.max(Math.max(Math.abs(fl), Math.abs(bl)), Math.max(Math.abs(fr), Math.abs(br)));
-        if(max > 1){
-            fl /= max;
-            bl /= max;
-            fr /= max;
-            br /= max;
-        }*/
+            max = Math.max(Math.max(Math.abs(fl), Math.abs(bl)), Math.max(Math.abs(fr), Math.abs(br)));
+            if(max > 1){
+                fl /= max;
+                bl /= max;
+                fr /= max;
+                br /= max;
+            }*/
 
-        double y = gamepad1.left_stick_y;  // Forward/backward (inverted)
-        double x = -gamepad1.left_stick_x;   // Strafe left/right
-        double rx = -gamepad1.right_stick_x; // Rotation
+            double y = gamepad1.left_stick_y;  // Forward/backward (inverted)
+            double x = -gamepad1.left_stick_x;   // Strafe left/right
+            double rx = -gamepad1.right_stick_x; // Rotation
 
-        // Calculate motor powers using mecanum drive kinematics
-        double fl = y + x + rx;
-        double fr = y - x - rx;
-        double bl = y - x + rx;
-        double br = y + x - rx;
+            // Calculate motor powers using mecanum drive kinematics
+            double fl = y + x + rx;
+            double fr = y - x - rx;
+            double bl = y - x + rx;
+            double br = y + x - rx;
 
-        // Find the maximum power
-        double maxPower = Math.max(
-                Math.max(Math.abs(fl), Math.abs(fr)),
-                Math.max(Math.abs(bl), Math.abs(br))
-        );
+            // Find the maximum power
+            double maxPower = Math.max(
+                    Math.max(Math.abs(fl), Math.abs(fr)),
+                    Math.max(Math.abs(bl), Math.abs(br))
+            );
 
-        // Normalize powers if any exceed 1.0
-        if (maxPower > 1.0) {
-            fl /= maxPower;
-            fr /= maxPower;
-            bl /= maxPower;
-            br /= maxPower;
+            // Normalize powers if any exceed 1.0
+            if (maxPower > 1.0) {
+                fl /= maxPower;
+                fr /= maxPower;
+                bl /= maxPower;
+                br /= maxPower;
+            }
+
+            motors[0].setPower(fl);
+            motors[1].setPower(bl);
+            motors[2].setPower(fr);
+            motors[3].setPower(br);
+
+            telemetry.addLine("-------DRIVETRAIN------");
+            telemetry.addData("fl", fl);
+            telemetry.addData("bl", bl);
+            telemetry.addData("fr", fr);
+            telemetry.addData("br", br);
+
+            //intake
+            long currentTime = System.currentTimeMillis();
+            if (gamepad1.a) {
+                intakeMotor.setPower(-1.0);
+                if (intakeServoPosition != 0.3) {
+                    intakeServo.setPosition(0.3);
+                    intakeServoPosition = 0.3;
+                }
+            } else if (gamepad1.y/* || currentTime - lastIntakeTime > 1000*/) {
+                if (intakeServoPosition != 0.6) {
+                    intakeServo.setPosition(0.6);
+                    intakeServoPosition = 0.6;
+                }
+                intakeMotor.setPower(0);
+            } else if (gamepad1.x) {
+                intakeMotor.setPower(-1.0);
+                if (currentTime - lastIntakeTime >= 250) {
+                    intakeServo.setPosition(0);
+                    intakeServoPosition = 0;
+                }
+                if (intakeServoPosition != 0.3 && intakeServoPosition != 0) {
+                    lastIntakeTime = currentTime;
+                    intakeServo.setPosition(0.3);
+                    intakeServoPosition = 0.3;
+                }
+            } else {
+                intakeMotor.setPower(0);
+            }
+
+            telemetry.addLine("-------INTAKE------");
+            telemetry.addData("servoPosition", intakeServoPosition);
+
+            telemetry.update();
         }
-
-        motors[0].setPower(fl);
-        motors[1].setPower(bl);
-        motors[2].setPower(fr);
-        motors[3].setPower(br);
-
-        telemetry.addLine("-------DRIVETRAIN------");
-        telemetry.addData("fl", fl);
-        telemetry.addData("bl", bl);
-        telemetry.addData("fr", fr);
-        telemetry.addData("br", br);
-
-        //intake
-        long currentTime = System.currentTimeMillis();
-        if (gamepad1.a) {
-            intakeMotor.setPower(-1.0);
-            if(intakeServoPosition != 0.3){
-                intakeServo.setPosition(0.3);
-                intakeServoPosition = 0.3;
-            }
-        } else if (gamepad1.y/* || currentTime - lastIntakeTime > 1000*/) {
-            if(intakeServoPosition != 0.6) {
-                intakeServo.setPosition(0.6);
-                intakeServoPosition = 0.6;
-            }
-            intakeMotor.setPower(0);
-        } else if (gamepad1.x){
-            intakeMotor.setPower(-1.0);
-            if(currentTime - lastIntakeTime >= 250){
-                intakeServo.setPosition(0);
-                intakeServoPosition = 0;
-            }
-            if(intakeServoPosition != 0.3 && intakeServoPosition != 0) {
-                lastIntakeTime = currentTime;
-                intakeServo.setPosition(0.3);
-                intakeServoPosition = 0.3;
-            }
-        }else{
-            intakeMotor.setPower(0);
-        }
-
-        telemetry.addLine("-------INTAKE------");
-        telemetry.addData("servoPosition", intakeServoPosition);
-
-        telemetry.update();
     }
 }
