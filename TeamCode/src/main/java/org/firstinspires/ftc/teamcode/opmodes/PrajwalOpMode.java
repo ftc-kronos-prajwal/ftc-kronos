@@ -47,14 +47,14 @@ public class PrajwalOpMode extends OpMode {
         drive = new SampleMecanumDrive(hardwareMap);
 
         trajectory = drive.trajectoryBuilder(new Pose2d())
-                .forward(12)
+                .forward(24)
                 .build();
-        drive.followTrajectoryAsync(trajectory);
+        drive.followTrajectory(trajectory);
     }
 
     @Override
     public void loop(){
-        drive.update();
+        //drive.update();
 
         if(!drive.isBusy()) {
             //drivetrain
