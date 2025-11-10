@@ -52,8 +52,8 @@ public class PrajwalOpMode extends OpMode {
 
         drive.setPoseEstimate(pose);
         trajectory = drive.trajectorySequenceBuilder(pose)
-                .forward(24.0)
-                .strafeLeft(-12)
+                .forward(12.0)
+                .strafeLeft(-12.0)
                 .turn(Math.toRadians(90))
                 .build();
         drive.followTrajectorySequenceAsync(trajectory);
