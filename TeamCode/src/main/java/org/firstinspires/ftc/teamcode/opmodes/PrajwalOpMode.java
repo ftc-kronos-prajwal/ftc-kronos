@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -54,7 +53,7 @@ public class PrajwalOpMode extends OpMode {
         drive.setPoseEstimate(pose);
         trajectory = drive.trajectorySequenceBuilder(pose)
                 .forward(24.0)
-                .strafeTo(new Vector2d(-6.0, -6.0))
+                .strafeLeft(-12)
                 .turn(Math.toRadians(90))
                 .build();
         drive.followTrajectorySequenceAsync(trajectory);
