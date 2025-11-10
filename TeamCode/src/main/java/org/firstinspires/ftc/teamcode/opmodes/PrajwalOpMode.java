@@ -173,7 +173,9 @@ public class PrajwalOpMode extends OpMode {
 
             //drivetrain
 
-            double[] rotated = rot(gamepad1.left_stick_x, gamepad1.left_stick_y, drive.getPoseEstimate().getHeading());
+            Pose2d estimate = drive.getPoseEstimate();
+
+            double[] rotated = rot(gamepad1.left_stick_x, gamepad1.left_stick_y, estimate.getHeading());
             double y = -rotated[1];  // Forward/backward (inverted)
             double x = rotated[0];   // Strafe left/right
             double rx = gamepad1.right_stick_x; // Rotation
@@ -208,6 +210,8 @@ public class PrajwalOpMode extends OpMode {
             telemetry.addData("bl", bl);
             telemetry.addData("fr", fr);
             telemetry.addData("br", br);
+            telemetry.addData("heading", estimate.getHeading());
+            telemetry.update();
 
             //intake
             currentTime = System.currentTimeMillis();
