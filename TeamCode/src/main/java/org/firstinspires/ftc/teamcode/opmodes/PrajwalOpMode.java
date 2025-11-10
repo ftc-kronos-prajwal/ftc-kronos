@@ -91,9 +91,9 @@ public class PrajwalOpMode extends OpMode {
                 br /= max;
             }*/
 
-            double y = gamepad1.left_stick_y;  // Forward/backward (inverted)
-            double x = -gamepad1.left_stick_x;   // Strafe left/right
-            double rx = -gamepad1.right_stick_x; // Rotation
+            double y = -gamepad1.left_stick_y;  // Forward/backward (inverted)
+            double x = gamepad1.left_stick_x;   // Strafe left/right
+            double rx = gamepad1.right_stick_x; // Rotation
 
             // Calculate motor powers using mecanum drive kinematics
             double fl = y + x + rx;
