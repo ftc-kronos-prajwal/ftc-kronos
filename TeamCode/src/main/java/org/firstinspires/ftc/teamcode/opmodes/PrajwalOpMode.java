@@ -41,7 +41,7 @@ public class PrajwalOpMode extends OpMode {
 
         for(int i = 0; i < motors.length; i+=1) {
             motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motors[i].setDirection((i >= 2) ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
+            //motors[i].setDirection((i >= 2) ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
             //motors[i].setDirection(DcMotor.Direction.FORWARD);
         }
 
