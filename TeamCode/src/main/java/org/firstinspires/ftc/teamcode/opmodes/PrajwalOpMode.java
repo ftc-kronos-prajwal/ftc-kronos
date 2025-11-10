@@ -48,11 +48,13 @@ public class PrajwalOpMode extends OpMode {
         drive = new SampleMecanumDrive(hardwareMap);
 
         Pose2d pose = new Pose2d();
-        Vector2d start = pose.vec();
+        telemetry.addData("x", pose.getX());
+        telemetry.addData("y", pose.getY());
+
         drive.setPoseEstimate(pose);
         trajectory = drive.trajectorySequenceBuilder(pose)
                 .forward(24.0)
-                .strafeTo(start.plus(new Vector2d(-6.0, -6.0)))
+                .strafeTo(new Vector2d(-6.0, -6.0))
                 .turn(Math.toRadians(90))
                 .build();
         drive.followTrajectorySequenceAsync(trajectory);
