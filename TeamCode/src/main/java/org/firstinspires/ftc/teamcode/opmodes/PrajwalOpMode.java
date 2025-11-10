@@ -78,7 +78,7 @@ public class PrajwalOpMode extends OpMode {
 
     @Override
     public void loop(){
-        //drive.update();
+        drive.update();
 
         if(!drive.isBusy()) {
             //turret
