@@ -65,6 +65,8 @@ public class PrajwalOpMode extends OpMode {
         leftServo = hardwareMap.get(CRServo.class, "leftservo");
         rightServo = hardwareMap.get(CRServo.class, "rightservo");
         turretLaunchMotor = hardwareMap.get(DcMotor.class,"shootermotor");
+
+        turretLaunchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
     @Override
@@ -125,8 +127,8 @@ public class PrajwalOpMode extends OpMode {
                 }
             }
 
-            leftServo.setPower(turretRotPower);
-            rightServo.setPower(turretRotPower);
+            leftServo.setPower(-turretRotPower);
+            rightServo.setPower(-turretRotPower);
 
             if(currentTime - lastUpdateTime > 50) {
                 double prev = turretLaunchPower;
