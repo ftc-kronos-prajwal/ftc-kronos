@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -14,12 +15,16 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @TeleOp(name="PrajwalOpMode")
 public class PrajwalOpMode extends OpMode {
     private DcMotor[] motors = new DcMotor[4];
-    private DcMotor intakeMotor;
+    private DcMotor intakeMotor, turretLaunchMotor;
 
     private Servo intakeServo;
 
-    private double diag1, diag2, fl, bl, fr, br, max, leftX, rightX, leftY/*, rightY*/, intakeServoPosition;
-    private long lastUpdateTime, lastIntakeTime;
+    private double diag1, diag2, fl, bl, fr, br, max, leftX, rightX, leftY/*, rightY*/, intakeServoPosition, turretRotPower = 0, turretLaunchPower = 0;
+    private long lastUpdateTime, lastIntakeTime, lastTurretRotTime, currentTime;
+    private boolean lastTurretRotLogged = false, pLBState = false, pRBState = false;
+
+    private short lastTurretRotDir = 0;
+    private CRServo leftServo, rightServo;
 
     SampleMecanumDrive drive;
     TrajectorySequence trajectory;
@@ -30,7 +35,6 @@ public class PrajwalOpMode extends OpMode {
         motors[1] = hardwareMap.get(DcMotor.class,"backLeft");
         motors[2] = hardwareMap.get(DcMotor.class,"frontRight");
         motors[3] = hardwareMap.get(DcMotor.class,"backRight");
-
 
         intakeMotor = hardwareMap.get(DcMotor.class, "intake");
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -56,37 +60,104 @@ public class PrajwalOpMode extends OpMode {
                 .lineTo(new Vector2d(-6.0, 6.0))
                 .turn(Math.toRadians(90))
                 .build();
-        drive.followTrajectorySequenceAsync(trajectory);
+        //drive.followTrajectorySequenceAsync(trajectory);
+
+        leftServo = hardwareMap.get(CRServo.class, "leftservo");
+        rightServo = hardwareMap.get(CRServo.class, "rightservo");
+        turretLaunchMotor = hardwareMap.get(DcMotor.class,"shootermotor");
     }
 
     @Override
     public void loop(){
-        drive.update();
+        //drive.update();
 
         if(!drive.isBusy()) {
+            //turret
+
+            currentTime = System.currentTimeMillis();
+            if(gamepad1.left_bumper){
+                if(lastTurretRotDir != 1){
+                    turretRotPower = 0;
+                    lastTurretRotDir = 1;
+                    lastTurretRotLogged = false;
+                }
+                if(!pLBState && turretRotPower != 0){
+                    turretRotPower += 0.5;
+                    if(turretRotPower > 1.0) turretRotPower = 1.0;
+                    if(turretRotPower < -1.0) turretRotPower = -1.0;
+                    pLBState = true;
+                    pRBState = false;
+                }
+                if(lastTurretRotLogged){
+                    turretRotPower += ((double) (lastTurretRotTime - currentTime))/500.0;
+                    if(turretRotPower > 1.0) turretRotPower = 1.0;
+                    if(turretRotPower < -1.0) turretRotPower = -1.0;
+                }
+                lastTurretRotTime = currentTime;
+                lastTurretRotLogged = true;
+            }else if(gamepad1.right_bumper){
+                if(lastTurretRotDir != -1){
+                    turretRotPower = 0;
+                    lastTurretRotDir = -1;
+                    lastTurretRotLogged = false;
+                }
+                if(!pRBState && turretRotPower != 0){
+                    turretRotPower -= 0.5;
+                    if(turretRotPower > 1.0) turretRotPower = 1.0;
+                    if(turretRotPower < -1.0) turretRotPower = -1.0;
+                    pLBState = false;
+                    pRBState = true;
+                }
+                if(lastTurretRotLogged){
+                    turretRotPower -= ((double) (lastTurretRotTime - currentTime))/500.0;
+                    if(turretRotPower > 1.0) turretRotPower = 1.0;
+                    if(turretRotPower < -1.0) turretRotPower = -1.0;
+                }
+                lastTurretRotTime = currentTime;
+                lastTurretRotLogged = true;
+            }else{
+                turretRotPower = 0;
+                lastTurretRotDir = 0;
+                lastTurretRotLogged = false;
+                pLBState = false;
+                pRBState = false;
+            }
+
+            leftServo.setPower(turretRotPower);
+            rightServo.setPower(turretRotPower);
+
+            double prev = turretLaunchPower;
+
+            if(gamepad1.right_trigger > 0) {
+                if(turretLaunchPower == 0){
+                    turretLaunchPower = 0.1;
+                }
+                turretLaunchPower *= (gamepad1.right_trigger + 1);
+                if(turretLaunchPower > prev + gamepad1.right_trigger/10){
+                    turretLaunchPower = prev + gamepad1.right_trigger/10;
+                }
+                if(turretLaunchPower > gamepad1.right_trigger){
+                    turretLaunchPower = gamepad1.right_trigger;
+                }
+            }else if(gamepad1.left_trigger > 0){
+                if(turretLaunchPower == 0){
+                    turretLaunchPower = -0.1;
+                }
+                turretLaunchPower *= (gamepad1.left_trigger + 1);
+                if(turretLaunchPower < prev - gamepad1.left_trigger/10){
+                    turretLaunchPower = prev - gamepad1.left_trigger/10;
+                }
+                if(turretLaunchPower < -gamepad1.left_trigger){
+                    turretLaunchPower = -gamepad1.left_trigger;
+                }
+            }
+
+            if(turretLaunchPower > 1.0) turretLaunchPower = 1.0;
+            if(turretLaunchPower < -1.0) turretLaunchPower = -1.0;
+
+            turretLaunchMotor.setPower(turretLaunchPower);
+
             //drivetrain
-
-            /*double angle = Math.atan2(-gamepad1.left_stick_y, -gamepad1.left_stick_x);
-
-            if((angle > 3*Math.PI/8 && angle < 5*Math.PI/8) || (angle < -3*Math.PI/8 && angle > -5*Math.PI/8)){
-                leftX = 0;
-            }*/
-
-            /*diag1 = leftY + leftX;
-            diag2 = leftY - leftX;
-
-            fl = leftY + leftX + rightX;
-            bl = leftY - leftX + rightX;
-            fr = leftY - leftX - rightX;
-            br = leftY + leftX - rightX;
-
-            max = Math.max(Math.max(Math.abs(fl), Math.abs(bl)), Math.max(Math.abs(fr), Math.abs(br)));
-            if(max > 1){
-                fl /= max;
-                bl /= max;
-                fr /= max;
-                br /= max;
-            }*/
 
             double y = -gamepad1.left_stick_y;  // Forward/backward (inverted)
             double x = gamepad1.left_stick_x;   // Strafe left/right
@@ -124,7 +195,7 @@ public class PrajwalOpMode extends OpMode {
             telemetry.addData("br", br);
 
             //intake
-            long currentTime = System.currentTimeMillis();
+            currentTime = System.currentTimeMillis();
             if (gamepad1.a) {
                 intakeMotor.setPower(-1.0);
                 if (intakeServoPosition != 0.3) {
