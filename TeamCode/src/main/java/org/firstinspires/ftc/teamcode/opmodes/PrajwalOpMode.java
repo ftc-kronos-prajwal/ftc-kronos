@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 
 @TeleOp(name="PrajwalOpMode")
@@ -21,7 +22,7 @@ public class PrajwalOpMode extends OpMode {
     private long lastUpdateTime, lastIntakeTime;
 
     SampleMecanumDrive drive;
-    Trajectory trajectory;
+    TrajectorySequence trajectory;
 
     @Override
     public void init(){
@@ -47,11 +48,14 @@ public class PrajwalOpMode extends OpMode {
         drive = new SampleMecanumDrive(hardwareMap);
 
         Pose2d pose = new Pose2d();
+        Vector2d start = pose.vec();
         drive.setPoseEstimate(pose);
-        trajectory = drive.trajectoryBuilder(pose)
+        trajectory = drive.trajectorySequenceBuilder(pose)
                 .forward(24.0)
+                .strafeTo(start.plus(new Vector2d(-6.0, -6.0)))
+                .turn(Math.toRadians(90))
                 .build();
-        drive.followTrajectoryAsync(trajectory);
+        drive.followTrajectorySequenceAsync(trajectory);
     }
 
     @Override
