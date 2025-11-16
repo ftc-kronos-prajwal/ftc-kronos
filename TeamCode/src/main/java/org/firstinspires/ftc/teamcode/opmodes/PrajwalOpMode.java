@@ -169,6 +169,10 @@ public class PrajwalOpMode extends OpMode {
                 if (turretLaunchPower < -1.0) turretLaunchPower = -1.0;
             }
 
+            if(gamepad1.b){
+                turretLaunchPower = 1.0;
+            }
+
             turretLaunchMotor.setPower(turretLaunchPower);
 
             //drivetrain
@@ -238,11 +242,18 @@ public class PrajwalOpMode extends OpMode {
                     intakeServo.setPosition(0.3);
                     intakeServoPosition = 0.3;
                 }
+            } else if (gamepad1.b){
+                intakeMotor.setPower(-1.0);
+                if (intakeServoPosition != 0.3) {
+                    intakeServo.setPosition(0.3);
+                    intakeServoPosition = 0.3;
+                }
             } else {
                 intakeMotor.setPower(0);
             }
 
             if(currentTime - lastUpdateTime > 50) lastUpdateTime = System.currentTimeMillis();
+
         }
     }
 }
