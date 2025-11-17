@@ -62,13 +62,14 @@ public class PrajwalOpMode extends OpMode {
         telemetry.addData("x", pose.getX());
         telemetry.addData("y", pose.getY());
 
-        drive.setPoseEstimate(pose);
-        trajectory = drive.trajectorySequenceBuilder(pose)
+        //drive.setPoseEstimate(pose);
+        /*trajectory = drive.trajectorySequenceBuilder(pose)
                 .lineTo(new Vector2d(-6.0, 6.0))
                 .turn(Math.toRadians(90))
-                .build();
+                .build();*/
         //drive.followTrajectorySequenceAsync(trajectory);
 
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftServo = hardwareMap.get(CRServo.class, "leftservo");
         rightServo = hardwareMap.get(CRServo.class, "rightservo");
         turretLaunchMotor = hardwareMap.get(DcMotor.class,"shootermotor");
@@ -78,7 +79,26 @@ public class PrajwalOpMode extends OpMode {
 
     @Override
     public void loop(){
-        drive.update();
+        //drivetrain
+
+        Pose2d estimate = drive.getPoseEstimate();
+
+        // Create a vector from the gamepad x/y inputs
+        // Then, rotate that vector by the inverse of that heading
+        Vector2d input = new Vector2d(
+                -gamepad1.left_stick_y,
+                -gamepad1.left_stick_x
+        ).rotated(-estimate.getHeading());
+
+        // Pass in the rotated input + right stick value for rotation
+        // Rotation is not part of the rotated input thus must be passed in separately
+        drive.setWeightedDrivePower(
+                new Pose2d(
+                        input.getX(),
+                        input.getY(),
+                        -gamepad1.right_stick_x
+                )
+        );
 
         if(!drive.isBusy()) {
             //turret
@@ -177,7 +197,7 @@ public class PrajwalOpMode extends OpMode {
 
             //drivetrain
 
-            Pose2d estimate = drive.getPoseEstimate();
+            /*Pose2d estimate = drive.getPoseEstimate();
 
             double[] rotated = rot(gamepad1.left_stick_x, gamepad1.left_stick_y, estimate.getHeading());
             double y = -rotated[1];  // Forward/backward (inverted)
@@ -215,7 +235,8 @@ public class PrajwalOpMode extends OpMode {
             telemetry.addData("fr", fr);
             telemetry.addData("br", br);
             telemetry.addData("heading", estimate.getHeading());
-            telemetry.update();
+            telemetry.update();*/
+            // Example of getting the current heading
 
             //intake
             currentTime = System.currentTimeMillis();
@@ -255,5 +276,6 @@ public class PrajwalOpMode extends OpMode {
             if(currentTime - lastUpdateTime > 50) lastUpdateTime = System.currentTimeMillis();
 
         }
+        drive.update();
     }
 }
