@@ -193,6 +193,9 @@ public class PrajwalOpMode extends OpMode {
                 turretLaunchPower = 1.0;
             }
 
+            telemetry.addData("Turret Power", turretLaunchPower);
+            telemetry.update();
+
             turretLaunchMotor.setPower(turretLaunchPower);
 
             //drivetrain
