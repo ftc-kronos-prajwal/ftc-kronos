@@ -54,6 +54,8 @@ public class PrajwalAuto extends OpMode {
 
         Pose2d startPose = new Pose2d(0, 24, Math.toRadians(180));
 
+        drive.setPoseEstimate(startPose);
+
         intakeServo.setPosition(0.3);
 
         telemetry.addData("Status", "Initialized");
