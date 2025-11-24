@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -14,16 +15,18 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @TeleOp(name="PrajwalOpMode")
 public class PrajwalOpMode extends OpMode {
     private DcMotor[] motors = new DcMotor[4];
-    private DcMotor intakeMotor, turretLaunchMotor;
+    private DcMotor intakeMotor, turretLaunchMotor, kickerMotor;
 
-    private Servo intakeServo;
+    private Servo intakeServo, stopperServo;
 
-    private double diag1, diag2, fl, bl, fr, br, max, leftX, rightX, leftY/*, rightY*/, intakeServoPosition, turretRotPower = 0, turretLaunchPower = 0;
+    private double diag1, diag2, fl, bl, fr, br, max, leftX, rightX, leftY/*, rightY*/, intakeServoPosition = 0.6, stopperServoPosition = 0.5, turretRotPower = 0, turretLaunchPower = 0, kickerMotorPower = 0.0;
     private long lastUpdateTime, lastIntakeTime, lastTurretRotTime, currentTime;
     private boolean lastTurretRotLogged = false, pLBState = false, pRBState = false;
 
     private short lastTurretRotDir = 0;
     private CRServo leftServo, rightServo;
+
+    private ElapsedTime timer = new ElapsedTime();
 
     SampleMecanumDrive drive;
     TrajectorySequence trajectory;
@@ -48,7 +51,13 @@ public class PrajwalOpMode extends OpMode {
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
         intakeServo = hardwareMap.get(Servo.class, "servo");
-        intakeServo.setPosition(0.6);
+        intakeServo.setPosition(intakeServoPosition);
+
+        stopperServo = hardwareMap.get(Servo.class, "stopperServo");
+        stopperServo.setPosition(stopperServoPosition);
+
+        kickerMotor = hardwareMap.get(DcMotor.class, "kickerMotor");
+        kickerMotor.setPower(kickerMotorPower);
 
         for(int i = 0; i < motors.length; i+=1) {
             motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -75,6 +84,7 @@ public class PrajwalOpMode extends OpMode {
         turretLaunchMotor = hardwareMap.get(DcMotor.class,"shootermotor");
 
         turretLaunchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        kickerMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
@@ -156,7 +166,7 @@ public class PrajwalOpMode extends OpMode {
             leftServo.setPower(-turretRotPower);
             rightServo.setPower(-turretRotPower);
 
-            if(currentTime - lastUpdateTime > 50) {
+            /*if(currentTime - lastUpdateTime > 50) {
                 double prev = turretLaunchPower;
 
                 if (gamepad1.right_trigger > 0) {
@@ -187,12 +197,30 @@ public class PrajwalOpMode extends OpMode {
 
                 if (turretLaunchPower > 1.0) turretLaunchPower = 1.0;
                 if (turretLaunchPower < -1.0) turretLaunchPower = -1.0;
+            }*/
+            turretLaunchMotor.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
+            if(Math.abs(gamepad1.right_trigger-gamepad1.left_trigger) >= 0.95){
+                if(timer.milliseconds() > 1000){
+                    if(stopperServoPosition != 0.0){
+                        stopperServo.setPosition(0.0);
+                        stopperServoPosition = 0.0;
+                    }
+                    if(kickerMotorPower != -1.0){
+                        kickerMotor.setPower(-1.0);
+                        kickerMotorPower = -1.0
+                    }
+                }
+            }else{
+                timer.reset();
+                if(stopperServoPosition != 0.5){
+                    stopperServo.setPosition(0.5);
+                    stopperServoPosition = 0.5;
+                }
+                if(kickerMotorPower != 0.0){
+                    kickerMotor.setPower(0.0);
+                    kickerMotorPower = 0.0
+                }
             }
-
-            if(gamepad1.b){
-                turretLaunchPower = 1.0;
-            }
-
             telemetry.addData("Turret Power", turretLaunchPower);
             telemetry.update();
 
@@ -239,11 +267,19 @@ public class PrajwalOpMode extends OpMode {
             telemetry.addData("br", br);
             telemetry.addData("heading", estimate.getHeading());
             telemetry.update();*/
-            // Example of getting the current heading
 
             //intake
             currentTime = System.currentTimeMillis();
             if (gamepad1.a) {
+                if(stopperServoPosition != 0.5){
+                    stopperServo.setPosition(0.5);
+                    stopperServoPosition = 0.5;
+                    try{
+                        Thread.sleep(50);
+                    }catch(InterruptedException e){
+                        Thread.currentThread().interrupt();
+                    }
+                }
                 intakeMotor.setPower(-1.0);
                 if (intakeServoPosition != 0.3) {
                     intakeServo.setPosition(0.3);
