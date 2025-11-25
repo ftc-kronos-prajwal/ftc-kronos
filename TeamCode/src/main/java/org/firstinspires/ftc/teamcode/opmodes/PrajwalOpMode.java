@@ -199,6 +199,7 @@ public class PrajwalOpMode extends OpMode {
                 if (turretLaunchPower < -1.0) turretLaunchPower = -1.0;
             }*/
             turretLaunchMotor.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
+
             if(Math.abs(gamepad1.right_trigger-gamepad1.left_trigger) >= 0.95){
                 if(timer.milliseconds() > 1000){
                     if(stopperServoPosition != 0.0){
@@ -207,18 +208,20 @@ public class PrajwalOpMode extends OpMode {
                     }
                     if(kickerMotorPower != -1.0){
                         kickerMotor.setPower(-1.0);
-                        kickerMotorPower = -1.0
+                        kickerMotorPower = -1.0;
                     }
+                    intakeMotor.setPower(-1.0);
                 }
             }else{
                 timer.reset();
                 if(stopperServoPosition != 0.5){
                     stopperServo.setPosition(0.5);
                     stopperServoPosition = 0.5;
+                    intakeMotor.setPower(0.0);
                 }
                 if(kickerMotorPower != 0.0){
                     kickerMotor.setPower(0.0);
-                    kickerMotorPower = 0.0
+                    kickerMotorPower = 0.0;
                 }
             }
             telemetry.addData("Turret Power", turretLaunchPower);
