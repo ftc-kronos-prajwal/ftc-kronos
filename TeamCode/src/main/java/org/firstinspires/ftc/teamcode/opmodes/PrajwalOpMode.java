@@ -19,7 +19,7 @@ public class PrajwalOpMode extends OpMode {
 
     private Servo intakeServo, stopperServo;
 
-    private double diag1, diag2, fl, bl, fr, br, max, leftX, rightX, leftY/*, rightY*/, intakeServoPosition = 0.6, stopperServoPosition = 0.5, turretRotPower = 0, turretLaunchPower = 0, kickerMotorPower = 0.0;
+    private double diag1, diag2, fl, bl, fr, br, max, leftX, rightX, leftY/*, rightY*/, intakeServoPosition = 0.6, stopperServoPosition = 0.8, turretRotPower = 0, turretLaunchPower = 0, kickerMotorPower = 0.0;
     private long lastUpdateTime, lastIntakeTime, lastTurretRotTime, currentTime;
     private boolean lastTurretRotLogged = false, pLBState = false, pRBState = false;
 
@@ -30,6 +30,8 @@ public class PrajwalOpMode extends OpMode {
 
     SampleMecanumDrive drive;
     TrajectorySequence trajectory;
+
+    boolean forceIntake = false;
 
     private double[] rot(double x, double y, double theta) {
         double[] res = new double[2];
@@ -168,7 +170,7 @@ public class PrajwalOpMode extends OpMode {
 
             /*if(currentTime - lastUpdateTime > 50) {
                 double prev = turretLaunchPower;
-
+e
                 if (gamepad1.right_trigger > 0) {
                     if (turretLaunchPower <= 0) {
                         turretLaunchPower = 0.1;
@@ -201,33 +203,40 @@ public class PrajwalOpMode extends OpMode {
             turretLaunchMotor.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
 
             if(Math.abs(gamepad1.right_trigger-gamepad1.left_trigger) >= 0.95){
-                if(timer.milliseconds() > 1000){
-                    if(stopperServoPosition != 0.0){
-                        stopperServo.setPosition(0.0);
-                        stopperServoPosition = 0.0;
+                if(timer.milliseconds() > 2000){
+                    if(stopperServoPosition != 0.7){
+                        stopperServo.setPosition(0.7);
+                        stopperServoPosition = 0.7;
                     }
-                    if(kickerMotorPower != -1.0){
-                        kickerMotor.setPower(-1.0);
-                        kickerMotorPower = -1.0;
+                }else if(timer.milliseconds() > 1000){
+                    if(stopperServoPosition != 0.85){
+                        stopperServo.setPosition(0.85);
+                        stopperServoPosition = 0.85;
+                    }
+                    if(kickerMotorPower != 1.0){
+                        kickerMotor.setPower(1.0);
+                        kickerMotorPower = 1.0;
                     }
                     intakeMotor.setPower(-1.0);
+                    forceIntake = true;
                 }
             }else{
                 timer.reset();
-                if(stopperServoPosition != 0.5){
-                    stopperServo.setPosition(0.5);
-                    stopperServoPosition = 0.5;
+                if(stopperServoPosition != 0.85){
+                    stopperServo.setPosition(0.85);
+                    stopperServoPosition = 0.85;
                     intakeMotor.setPower(0.0);
                 }
                 if(kickerMotorPower != 0.0){
                     kickerMotor.setPower(0.0);
                     kickerMotorPower = 0.0;
                 }
+                forceIntake = false;
             }
             telemetry.addData("Turret Power", turretLaunchPower);
             telemetry.update();
 
-            turretLaunchMotor.setPower(turretLaunchPower);
+            //turretLaunchMotor.setPower(turretLaunchPower);
 
             //drivetrain
 
@@ -274,9 +283,9 @@ public class PrajwalOpMode extends OpMode {
             //intake
             currentTime = System.currentTimeMillis();
             if (gamepad1.a) {
-                if(stopperServoPosition != 0.5){
-                    stopperServo.setPosition(0.5);
-                    stopperServoPosition = 0.5;
+                if(stopperServoPosition != 0.85){
+                    stopperServo.setPosition(0.85);
+                    stopperServoPosition = 0.85;
                     try{
                         Thread.sleep(50);
                     }catch(InterruptedException e){
@@ -311,7 +320,7 @@ public class PrajwalOpMode extends OpMode {
                     intakeServo.setPosition(0.3);
                     intakeServoPosition = 0.3;
                 }
-            } else {
+            } else if (!forceIntake){
                 intakeMotor.setPower(0);
             }
 
