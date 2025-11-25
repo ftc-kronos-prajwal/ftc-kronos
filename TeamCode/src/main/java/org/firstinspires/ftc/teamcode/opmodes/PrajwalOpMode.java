@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -27,6 +29,8 @@ public class PrajwalOpMode extends OpMode {
     private CRServo leftServo, rightServo;
 
     private ElapsedTime timer = new ElapsedTime();
+
+    NormalizedColorSensor colorSensor;
 
     SampleMecanumDrive drive;
     TrajectorySequence trajectory;
@@ -87,6 +91,8 @@ public class PrajwalOpMode extends OpMode {
 
         turretLaunchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         kickerMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
     }
 
     @Override
@@ -234,6 +240,11 @@ e
                 forceIntake = false;
             }
             telemetry.addData("Turret Power", turretLaunchPower);
+            NormalizedRGBA color = colorSensor.getNormalizedColors();
+            telemetry.addData("Color r", color.red);
+            telemetry.addData("Color g", color.green);
+            telemetry.addData("Color b", color.blue);
+            telemetry.addData("Color a", color.alpha);
             telemetry.update();
 
             //turretLaunchMotor.setPower(turretLaunchPower);
