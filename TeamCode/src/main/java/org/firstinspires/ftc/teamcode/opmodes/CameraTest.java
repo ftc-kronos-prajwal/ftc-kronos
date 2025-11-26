@@ -134,10 +134,7 @@ public class CameraTest extends LinearOpMode {
                 // == CAMERA CALIBRATION ==
                 // If you do not manually specify calibration parameters, the SDK will attempt
                 // to load a predefined calibration for your camera.
-                //.setLensIntrinsics(1492.12410874, 1492.12410874, 967.073440639, 526.621652962)
-                //.setLensIntrinsics(1731.126171, 1727.102741, 992.4175025, 400.8630539)
-                //.setLensIntrinsics(1629.873462, 1612.732819, 976.4911184, 492.4209909)
-                .setLensIntrinsics(1612.409975, 1594.66826, 967.3439456, 495.7939473)
+                .setLensIntrinsics(2013.92508, 2009.041219, 921.8679165, 451.7447623)
                 // ... these parameters are fx, fy, cx, cy.
                 .build();
 
