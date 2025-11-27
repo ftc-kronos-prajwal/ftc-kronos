@@ -214,6 +214,7 @@ e
                         stopperServo.setPosition(0.7);
                         stopperServoPosition = 0.7;
                     }
+                    intakeMotor.setPower(0.0);
                 }else if(timer.milliseconds() > 1000){
                     if(stopperServoPosition != 0.85){
                         stopperServo.setPosition(0.85);
