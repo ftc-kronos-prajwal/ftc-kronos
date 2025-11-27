@@ -216,9 +216,9 @@ e
                     }
                     intakeMotor.setPower(0.0);
                 }else if(timer.milliseconds() > 1000){
-                    if(stopperServoPosition != 0.85){
-                        stopperServo.setPosition(0.85);
-                        stopperServoPosition = 0.85;
+                    if(stopperServoPosition != 0.9){
+                        stopperServo.setPosition(0.9);
+                        stopperServoPosition = 0.9;
                     }
                     if(kickerMotorPower != 1.0){
                         kickerMotor.setPower(1.0);
@@ -229,9 +229,9 @@ e
                 }
             }else{
                 timer.reset();
-                if(stopperServoPosition != 0.85){
-                    stopperServo.setPosition(0.85);
-                    stopperServoPosition = 0.85;
+                if(stopperServoPosition != 0.9){
+                    stopperServo.setPosition(0.9);
+                    stopperServoPosition = 0.9;
                     intakeMotor.setPower(0.0);
                 }
                 if(kickerMotorPower != 0.0){
@@ -295,9 +295,9 @@ e
             //intake
             currentTime = System.currentTimeMillis();
             if (gamepad1.a) {
-                if(stopperServoPosition != 0.85){
-                    stopperServo.setPosition(0.85);
-                    stopperServoPosition = 0.85;
+                if(stopperServoPosition != 0.9){
+                    stopperServo.setPosition(0.9);
+                    stopperServoPosition = 0.9;
                     try{
                         Thread.sleep(50);
                     }catch(InterruptedException e){
