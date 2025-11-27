@@ -30,10 +30,10 @@ public class PrajwalOpMode extends OpMode {
 
     private ElapsedTime timer = new ElapsedTime();
 
-    NormalizedColorSensor colorSensor;
+    private NormalizedColorSensor colorSensor;
 
-    SampleMecanumDrive drive;
-    TrajectorySequence trajectory;
+    private SampleMecanumDrive drive;
+    private TrajectorySequence trajectory;
 
     boolean forceIntake = false;
 
