@@ -10,13 +10,23 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 public class ColorSensorTest extends LinearOpMode {
     private NormalizedColorSensor test_color;
 
+    private float gain = 0.0f;
+    private boolean pressed = false;
     @Override
     public void runOpMode() {
-        test_color = hardwareMap.get(NormalizedColorSensor.class, "test_color");
+        test_color = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
 
         waitForStart();
 
         while (opModeIsActive()) {
+            if(gamepad1.a && !pressed){
+                gain += 0.5;
+                test_color.setGain(gain);
+                pressed = true;
+            }else if(!gamepad1.a){
+                pressed = false;
+            }
+
             telemetry.addData("Light Detected", ((OpticalDistanceSensor) test_color).getLightDetected());
             NormalizedRGBA colors = test_color.getNormalizedColors();
 
@@ -24,6 +34,8 @@ public class ColorSensorTest extends LinearOpMode {
             telemetry.addData("Red", "%.3f", colors.red);
             telemetry.addData("Green", "%.3f", colors.green);
             telemetry.addData("Blue", "%.3f", colors.blue);
+
+            telemetry.addData("Gain", gain);
             telemetry.update();
         }
     }
