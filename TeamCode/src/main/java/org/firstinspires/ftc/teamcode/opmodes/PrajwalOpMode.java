@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -67,8 +66,6 @@ public class PrajwalOpMode extends OpMode {
 
         for(int i = 0; i < motors.length; i+=1) {
             motors[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            //motors[i].setDirection((i >= 2) ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
-            //motors[i].setDirection(DcMotor.Direction.FORWARD);
         }
 
         drive = new SampleMecanumDrive(hardwareMap);
@@ -76,13 +73,6 @@ public class PrajwalOpMode extends OpMode {
         Pose2d pose = new Pose2d(0, 0, 0);
         telemetry.addData("x", pose.getX());
         telemetry.addData("y", pose.getY());
-
-        //drive.setPoseEstimate(pose);
-        /*trajectory = drive.trajectorySequenceBuilder(pose)
-                .lineTo(new Vector2d(-6.0, 6.0))
-                .turn(Math.toRadians(90))
-                .build();*/
-        //drive.followTrajectorySequenceAsync(trajectory);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftServo = hardwareMap.get(CRServo.class, "leftservo");
@@ -101,15 +91,11 @@ public class PrajwalOpMode extends OpMode {
 
         Pose2d estimate = drive.getPoseEstimate();
 
-        // Create a vector from the gamepad x/y inputs
-        // Then, rotate that vector by the inverse of that heading
         Vector2d input = new Vector2d(
                 -gamepad1.left_stick_y,
                 -gamepad1.left_stick_x
         ).rotated(-estimate.getHeading());
 
-        // Pass in the rotated input + right stick value for rotation
-        // Rotation is not part of the rotated input thus must be passed in separately
         drive.setWeightedDrivePower(
                 new Pose2d(
                         input.getX(),
@@ -121,91 +107,34 @@ public class PrajwalOpMode extends OpMode {
         if(!drive.isBusy()) {
             //turret
             currentTime = System.currentTimeMillis();
-            if(currentTime - lastUpdateTime > 50) {
-                if (gamepad1.left_bumper) {
-                    if (lastTurretRotDir != 1) {
+
+            if (currentTime - lastUpdateTime > 50) {
+                int currentDir = gamepad1.left_bumper ? 1 : (gamepad1.right_bumper ? -1 : 0);
+
+                if (currentDir != 0) {
+                    if (lastTurretRotDir != currentDir) {
                         turretRotPower = 0;
-                        lastTurretRotDir = 1;
-                        lastTurretRotLogged = false;
+                        lastTurretRotDir = (short) currentDir;
                     }
-                    if (!pLBState && turretRotPower != 0) {
-                        turretRotPower += 0.5;
-                        if (turretRotPower > 1.0) turretRotPower = 1.0;
-                        if (turretRotPower < -1.0) turretRotPower = -1.0;
-                        pLBState = true;
-                        pRBState = false;
-                    }
-                    if (lastTurretRotLogged) {
-                        turretRotPower += ((double) (currentTime - lastTurretRotTime)) / 500.0;
-                        if (turretRotPower > 1.0) turretRotPower = 1.0;
-                        if (turretRotPower < -1.0) turretRotPower = -1.0;
-                    }
-                    lastTurretRotTime = currentTime;
-                    lastTurretRotLogged = true;
-                } else if (gamepad1.right_bumper) {
-                    if (lastTurretRotDir != -1) {
-                        turretRotPower = 0;
-                        lastTurretRotDir = -1;
-                        lastTurretRotLogged = false;
-                    }
-                    if (!pRBState && turretRotPower != 0) {
-                        turretRotPower -= 0.5;
-                        if (turretRotPower > 1.0) turretRotPower = 1.0;
-                        if (turretRotPower < -1.0) turretRotPower = -1.0;
-                        pLBState = false;
-                        pRBState = true;
-                    }
-                    if (lastTurretRotLogged) {
-                        turretRotPower -= ((double) (currentTime - lastTurretRotTime)) / 500.0;
-                        if (turretRotPower > 1.0) turretRotPower = 1.0;
-                        if (turretRotPower < -1.0) turretRotPower = -1.0;
-                    }
+
+                    double elapsed = (double) (currentTime - lastTurretRotTime);
+                    double rampIncrement = (lastTurretRotLogged) ? (elapsed / 500.0) : 0.5;
+
+                    turretRotPower += (currentDir * rampIncrement);
+
+                    turretRotPower = Math.max(-1.0, Math.min(1.0, turretRotPower));
+
                     lastTurretRotTime = currentTime;
                     lastTurretRotLogged = true;
                 } else {
                     turretRotPower = 0;
                     lastTurretRotDir = 0;
                     lastTurretRotLogged = false;
-                    pLBState = false;
-                    pRBState = false;
                 }
             }
 
             leftServo.setPower(-turretRotPower);
             rightServo.setPower(-turretRotPower);
-
-            /*if(currentTime - lastUpdateTime > 50) {
-                double prev = turretLaunchPower;
-e
-                if (gamepad1.right_trigger > 0) {
-                    if (turretLaunchPower <= 0) {
-                        turretLaunchPower = 0.1;
-                    }
-                    turretLaunchPower *= (gamepad1.right_trigger + 1);
-                    if (turretLaunchPower > prev + gamepad1.right_trigger / 10) {
-                        turretLaunchPower = prev + gamepad1.right_trigger / 10;
-                    }
-                    if (turretLaunchPower > gamepad1.right_trigger) {
-                        turretLaunchPower = gamepad1.right_trigger;
-                    }
-                } else if (gamepad1.left_trigger > 0) {
-                    if (turretLaunchPower >= 0) {
-                        turretLaunchPower = -0.1;
-                    }
-                    turretLaunchPower *= (gamepad1.left_trigger + 1);
-                    if (turretLaunchPower < prev - gamepad1.left_trigger / 10) {
-                        turretLaunchPower = prev - gamepad1.left_trigger / 10;
-                    }
-                    if (turretLaunchPower < -gamepad1.left_trigger) {
-                        turretLaunchPower = -gamepad1.left_trigger;
-                    }
-                }else{
-                    turretLaunchPower = 0;
-                }
-
-                if (turretLaunchPower > 1.0) turretLaunchPower = 1.0;
-                if (turretLaunchPower < -1.0) turretLaunchPower = -1.0;
-            }*/
             turretLaunchMotor.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
 
             if(Math.abs(gamepad1.right_trigger-gamepad1.left_trigger) >= 0.95){
@@ -240,17 +169,6 @@ e
                 }
                 forceIntake = false;
             }
-            telemetry.addData("Turret Power", turretLaunchPower);
-            NormalizedRGBA color = colorSensor.getNormalizedColors();
-            telemetry.addData("Color r", color.red);
-            telemetry.addData("Color g", color.green);
-            telemetry.addData("Color b", color.blue);
-            telemetry.addData("Color a", color.alpha);
-            telemetry.update();
-
-            //turretLaunchMotor.setPower(turretLaunchPower);
-
-            //drivetrain
 
             /*Pose2d estimate = drive.getPoseEstimate();
 
@@ -309,7 +227,7 @@ e
                     intakeServo.setPosition(0.3);
                     intakeServoPosition = 0.3;
                 }
-            } else if (gamepad1.y/* || currentTime - lastIntakeTime > 1000*/) {
+            } else if (gamepad1.y) {
                 if (intakeServoPosition != 0.6) {
                     intakeServo.setPosition(0.6);
                     intakeServoPosition = 0.6;
