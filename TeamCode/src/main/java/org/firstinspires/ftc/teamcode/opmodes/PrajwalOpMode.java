@@ -135,6 +135,7 @@ public class PrajwalOpMode extends OpMode {
 
             leftServo.setPower(gamepad1.left_bumper ? -1.0 : (gamepad1.right_bumper ? 1.0 : 0.0));
             rightServo.setPower(gamepad1.left_bumper ? -1.0 : (gamepad1.right_bumper ? 1.0 : 0.0));
+
             turretLaunchMotor.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
 
             if(Math.abs(gamepad1.right_trigger-gamepad1.left_trigger) >= 0.95){
