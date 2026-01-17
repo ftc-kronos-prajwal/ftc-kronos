@@ -10,8 +10,8 @@ public class ServoZeroer extends OpMode {
 
     @Override
     public void init(){
-        servo = hardwareMap.get(Servo.class, "stopperServo");
-        servo.setPosition(1.0);
+        servo = hardwareMap.get(Servo.class, "guiderServo");
+        servo.setPosition(0.0);
     }
 
     @Override
