@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 @TeleOp(name="MainOpMode")
 public class MainOpMode extends OpMode {
@@ -43,7 +42,6 @@ public class MainOpMode extends OpMode {
     boolean forceIntake = false;
 
     private AprilTagProcessor aprilTag;
-    private TfodProcessor tfod;
     private VisionPortal visionPortal;
 
     private double[] rot(double x, double y, double theta) {
@@ -105,7 +103,6 @@ public class MainOpMode extends OpMode {
         builder.setStreamFormat(VisionPortal.StreamFormat.MJPEG);
         builder.addProcessor(aprilTag);
 
-
     }
 
     @Override
@@ -161,7 +158,7 @@ public class MainOpMode extends OpMode {
 
             turretLaunchMotor.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
 
-            if(Math.abs(gamepad1.right_trigger-gamepad1.left_trigger) >= 0.95){
+            /*if(Math.abs(gamepad1.right_trigger-gamepad1.left_trigger) >= 0.95){
                 if(timer.milliseconds() > 2000){
                     if(stopperServoPosition != 0.7){
                         stopperServo.setPosition(0.7);
@@ -173,6 +170,31 @@ public class MainOpMode extends OpMode {
                         stopperServo.setPosition(0.9);
                         stopperServoPosition = 0.9;
                     }
+                    if(kickerMotorPower != 1.0){
+                        kickerMotor.setPower(1.0);
+                        kickerMotorPower = 1.0;
+                    }
+                    intakeMotor.setPower(-1.0);
+                    forceIntake = true;
+                }
+            }else{
+                timer.reset();
+                if(stopperServoPosition != 0.9){
+                    stopperServo.setPosition(0.9);
+                    stopperServoPosition = 0.9;
+                    intakeMotor.setPower(0.0);
+                }
+                if(kickerMotorPower != 0.0){
+                    kickerMotor.setPower(0.0);
+                    kickerMotorPower = 0.0;
+                }
+                forceIntake = false;
+            }*/
+
+            if(Math.abs(gamepad1.right_trigger-gamepad1.left_trigger) >= 0.95){
+                if(timer.milliseconds() > 6000){
+                    intakeMotor.setPower(0.0);
+                }else if(timer.milliseconds() > 5000){
                     if(kickerMotorPower != 1.0){
                         kickerMotor.setPower(1.0);
                         kickerMotorPower = 1.0;
