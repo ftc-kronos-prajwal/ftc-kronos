@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import android.graphics.Color;
 import android.util.Size;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -16,7 +16,12 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
+import org.firstinspires.ftc.vision.opencv.ColorRange;
+
+import java.util.List;
 
 @TeleOp(name="MainOpMode")
 public class MainOpMode extends OpMode {
@@ -30,19 +35,27 @@ public class MainOpMode extends OpMode {
     private boolean lastTurretRotLogged = false, pLBState = false, pRBState = false;
 
     private short lastTurretRotDir = 0;
-    private CRServo leftServo, rightServo;
+    private Servo leftServo, rightServo;
 
-    private ElapsedTime timer = new ElapsedTime();
+    private ElapsedTime timer = new ElapsedTime(), turretRotationTimer = new ElapsedTime(), lastCall = new ElapsedTime(), lastAprilTagDetection = new ElapsedTime();
 
     private NormalizedColorSensor colorSensor;
 
     private SampleMecanumDrive drive;
     private TrajectorySequence trajectory;
 
-    boolean forceIntake = false;
+    private boolean forceIntake = false, turretRotated = false;
 
     private AprilTagProcessor aprilTag;
+    private ColorBlobLocatorProcessor colorLocator;
     private VisionPortal visionPortal;
+
+    private double currentServoPosition = 0.0;
+
+    private boolean redAliance = false;
+
+    private final int RED_ALIANCE_GOAL_APRIL_TAG_ID = 24, BLUE_ALIANCE_GOAL_APRIL_TAG_ID = 20;
+    private int targetGoalAprilTagID;
 
     private double[] rot(double x, double y, double theta) {
         double[] res = new double[2];
@@ -83,8 +96,8 @@ public class MainOpMode extends OpMode {
         telemetry.addData("y", pose.getY());
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftServo = hardwareMap.get(CRServo.class, "leftservo");
-        rightServo = hardwareMap.get(CRServo.class, "rightservo");
+        leftServo = hardwareMap.get(Servo.class, "leftservo");
+        rightServo = hardwareMap.get(Servo.class, "rightservo");
         turretLaunchMotor = hardwareMap.get(DcMotor.class,"shootermotor");
 
         turretLaunchMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -92,8 +105,24 @@ public class MainOpMode extends OpMode {
 
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
 
+        rightServo.setPosition(currentServoPosition);
+        leftServo.setPosition(currentServoPosition);
+
+        //visionportal setup
         aprilTag = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(2013.92508, 2009.041219, 921.8679165, 451.7447623)
+                .build();
+
+        colorLocator = new ColorBlobLocatorProcessor.Builder()
+                .setTargetColorRange(ColorRange.ARTIFACT_PURPLE)
+                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)
+                .setDrawContours(true)
+                .setBoxFitColor(0)
+                .setCircleFitColor(Color.rgb(255, 255, 0))
+                .setBlurSize(5)
+                .setDilateSize(15)
+                .setErodeSize(15)
+                .setMorphOperationType(ColorBlobLocatorProcessor.MorphOperationType.CLOSING)
                 .build();
 
         VisionPortal.Builder builder = new VisionPortal.Builder();
@@ -102,9 +131,27 @@ public class MainOpMode extends OpMode {
         builder.setCameraResolution(new Size(1920, 1080));
         builder.setStreamFormat(VisionPortal.StreamFormat.MJPEG);
         builder.addProcessor(aprilTag);
+        builder.addProcessor(colorLocator);
 
+        lastCall.reset();
     }
 
+    @Override
+    public void init_loop(){
+        if(gamepad1.x){
+            redAliance = false;
+        }else if(gamepad1.b){
+            redAliance = true;
+        }
+
+        telemetry.addData("Aliance: " , redAliance ? "red" : "blue");
+        telemetry.update();
+    }
+
+    @Override
+    public void start(){
+        targetGoalAprilTagID = redAliance ? RED_ALIANCE_GOAL_APRIL_TAG_ID : BLUE_ALIANCE_GOAL_APRIL_TAG_ID;
+    }
     @Override
     public void loop(){
         //drivetrain
@@ -152,9 +199,19 @@ public class MainOpMode extends OpMode {
                     lastTurretRotLogged = false;
                 }
             }*/
+            if(gamepad1.left_bumper == gamepad1.right_bumper){
+                if(turretRotationTimer.milliseconds() > 5000) {
+                    turretRotated = false;
+                }
+            }else {
+                currentServoPosition += gamepad1.left_bumper ? (double) -lastCall.nanoseconds() /100000000 : (double) lastCall.nanoseconds() /100000000;
+                currentServoPosition = Math.min(currentServoPosition, Math.max(currentServoPosition, 0.0));
 
-            leftServo.setPower(gamepad1.left_bumper ? -1.0 : (gamepad1.right_bumper ? 1.0 : 0.0));
-            rightServo.setPower(gamepad1.left_bumper ? -1.0 : (gamepad1.right_bumper ? 1.0 : 0.0));
+                leftServo.setPosition(currentServoPosition);
+                rightServo.setPosition(currentServoPosition);
+                turretRotated = true;
+                turretRotationTimer.reset();
+            }
 
             turretLaunchMotor.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
 
@@ -204,11 +261,6 @@ public class MainOpMode extends OpMode {
                 }
             }else{
                 timer.reset();
-                if(stopperServoPosition != 0.9){
-                    stopperServo.setPosition(0.9);
-                    stopperServoPosition = 0.9;
-                    intakeMotor.setPower(0.0);
-                }
                 if(kickerMotorPower != 0.0){
                     kickerMotor.setPower(0.0);
                     kickerMotorPower = 0.0;
@@ -287,5 +339,27 @@ public class MainOpMode extends OpMode {
 
         }
         drive.update();
+
+        if(!turretRotated){
+            if(lastAprilTagDetection.milliseconds() >= 50) {
+                List<AprilTagDetection> detections = aprilTag.getFreshDetections();
+
+                if (detections != null) {
+                    for(AprilTagDetection detection : detections){
+                        if(detection.id == targetGoalAprilTagID){
+                            if(detection.ftcPose != null) {
+                                if (Math.abs(detection.ftcPose.x) > 1) {
+                                    currentServoPosition += detection.ftcPose.x/100;
+                                    rightServo.setPosition(currentServoPosition);
+                                    leftServo.setPosition(currentServoPosition);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        lastCall.reset();
     }
 }
