@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import android.util.Size;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -10,11 +12,15 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
-@TeleOp(name="PrajwalOpMode")
-public class PrajwalOpMode extends OpMode {
+@TeleOp(name="MainOpMode")
+public class MainOpMode extends OpMode {
     private DcMotor[] motors = new DcMotor[4];
     private DcMotor intakeMotor, turretLaunchMotor, kickerMotor;
 
@@ -35,6 +41,10 @@ public class PrajwalOpMode extends OpMode {
     private TrajectorySequence trajectory;
 
     boolean forceIntake = false;
+
+    private AprilTagProcessor aprilTag;
+    private TfodProcessor tfod;
+    private VisionPortal visionPortal;
 
     private double[] rot(double x, double y, double theta) {
         double[] res = new double[2];
@@ -83,6 +93,19 @@ public class PrajwalOpMode extends OpMode {
         kickerMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
+
+        aprilTag = new AprilTagProcessor.Builder()
+                .setLensIntrinsics(2013.92508, 2009.041219, 921.8679165, 451.7447623)
+                .build();
+
+        VisionPortal.Builder builder = new VisionPortal.Builder();
+
+        builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam"));
+        builder.setCameraResolution(new Size(1920, 1080));
+        builder.setStreamFormat(VisionPortal.StreamFormat.MJPEG);
+        builder.addProcessor(aprilTag);
+
+
     }
 
     @Override
