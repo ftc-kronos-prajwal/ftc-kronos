@@ -108,7 +108,7 @@ public class PrajwalOpMode extends OpMode {
             //turret
             currentTime = System.currentTimeMillis();
 
-            if (currentTime - lastUpdateTime > 50) {
+            /*if (currentTime - lastUpdateTime > 50) {
                 int currentDir = gamepad1.left_bumper ? 1 : (gamepad1.right_bumper ? -1 : 0);
 
                 if (currentDir != 0) {
@@ -131,10 +131,10 @@ public class PrajwalOpMode extends OpMode {
                     lastTurretRotDir = 0;
                     lastTurretRotLogged = false;
                 }
-            }
+            }*/
 
-            leftServo.setPower(-turretRotPower);
-            rightServo.setPower(-turretRotPower);
+            leftServo.setPower(gamepad1.left_bumper ? -1.0 : (gamepad1.right_bumper ? 1.0 : 0.0));
+            rightServo.setPower(gamepad1.left_bumper ? -1.0 : (gamepad1.right_bumper ? 1.0 : 0.0));
             turretLaunchMotor.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
 
             if(Math.abs(gamepad1.right_trigger-gamepad1.left_trigger) >= 0.95){
