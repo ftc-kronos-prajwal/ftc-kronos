@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -50,7 +51,7 @@ public class MainOpMode extends OpMode {
     private ColorBlobLocatorProcessor colorLocator;
     private VisionPortal visionPortal;
 
-    private double currentServoPosition = 0.0;
+    private double currentServoPosition = 0.2;
 
     private boolean redAliance = false;
 
@@ -206,8 +207,8 @@ public class MainOpMode extends OpMode {
                     turretRotated = false;
                 }
             }else {
-                currentServoPosition += gamepad1.left_bumper ? (double) -lastCall.nanoseconds() /100000000 : (double) lastCall.nanoseconds() /100000000;
-                currentServoPosition = Math.min(currentServoPosition, Math.max(currentServoPosition, 0.0));
+                currentServoPosition += gamepad1.left_bumper ? (double) lastCall.nanoseconds() /100000000 : (double) -lastCall.nanoseconds() /100000000;
+                currentServoPosition = Range.clip(currentServoPosition, 0.0, 0.4);
 
                 leftServo.setPosition(currentServoPosition);
                 rightServo.setPosition(currentServoPosition);
@@ -343,22 +344,27 @@ public class MainOpMode extends OpMode {
 
         }
 
+        int i = 0;
         if(!turretRotated){
             if(lastAprilTagDetection.milliseconds() >= 50) {
                 List<AprilTagDetection> detections = aprilTag.getFreshDetections();
 
                 if (detections != null) {
                     for(AprilTagDetection detection : detections){
+                        i+=1;
+                        telemetry.addLine(String.format("Detection %d: id %d, name %s, bearing: %f", i, detection.id, detection.metadata != null ? detection.metadata.name : "NULL", detection.ftcPose != null ? detection.ftcPose.bearing : -1.0));
                         if(detection.id == targetGoalAprilTagID){
                             if(detection.ftcPose != null) {
-                                if (Math.abs(detection.ftcPose.x) > 1) {
-                                    currentServoPosition += detection.ftcPose.x/100;
+                                if (Math.abs(detection.ftcPose.bearing) > 5.0) {
+                                    currentServoPosition -= 0.05*detection.ftcPose.bearing/1800;
+                                    currentServoPosition = Range.clip(currentServoPosition, 0.0, 0.4);
                                     rightServo.setPosition(currentServoPosition);
                                     leftServo.setPosition(currentServoPosition);
                                 }
                             }
                         }
                     }
+                    telemetry.update();
                     lastAprilTagDetection.reset();
                 }
             }
