@@ -357,7 +357,7 @@ public class MainOpMode extends OpMode {
 
         int i = 0;
         boolean moved = gamepad1.right_stick_x == 0 && gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0;
-        if(!moved && lastMoveTimer.milliseconds() > 5000 && !drive.isBusy()){
+        if(!moved && gamepad1.x && !drive.isBusy()){
             if(lastAprilTagDetection.milliseconds() >= 50) {
                 List<AprilTagDetection> detections = aprilTag.getFreshDetections();
 
