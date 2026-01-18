@@ -133,6 +133,8 @@ public class MainOpMode extends OpMode {
         builder.addProcessor(aprilTag);
         builder.addProcessor(colorLocator);
 
+        visionPortal = builder.build();
+
         lastCall.reset();
     }
 
