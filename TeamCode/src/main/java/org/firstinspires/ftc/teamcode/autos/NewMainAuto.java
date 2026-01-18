@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous
-public class MainAuto extends OpMode {
+public class NewMainAuto extends OpMode {
 
     private SampleMecanumDrive drive;
     private double angle;
@@ -34,7 +34,7 @@ public class MainAuto extends OpMode {
     public void start() {
         // Start first trajectory when autonomous begins
         TrajectorySequence traj = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-                .forward(2)
+                .forward(4)
                 .build();
         drive.followTrajectorySequenceAsync(traj);
     }
