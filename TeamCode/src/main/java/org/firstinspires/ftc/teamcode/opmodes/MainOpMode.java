@@ -356,9 +356,19 @@ public class MainOpMode extends OpMode {
                             }
                         }
                     }
+                    lastAprilTagDetection.reset();
                 }
             }
         }
+
+        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+
+        ColorBlobLocatorProcessor.Util.filterByCriteria(
+                ColorBlobLocatorProcessor.BlobCriteria.BY_CONTOUR_AREA,
+                50, 20000, blobs);
+        ColorBlobLocatorProcessor.Util.filterByCriteria(
+                ColorBlobLocatorProcessor.BlobCriteria.BY_CIRCULARITY,
+                0.6, 1, blobs);
 
         lastCall.reset();
     }
