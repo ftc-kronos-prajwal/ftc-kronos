@@ -208,7 +208,7 @@ public class MainOpMode extends OpMode {
                 }
             }else {
                 currentServoPosition += gamepad1.left_bumper ? (double) lastCall.nanoseconds() /100000000 : (double) -lastCall.nanoseconds() /100000000;
-                currentServoPosition = Range.clip(currentServoPosition, 0.0, 1.0);
+                currentServoPosition = Range.clip(currentServoPosition, 0.0, 0.4);
 
                 leftServo.setPosition(currentServoPosition);
                 rightServo.setPosition(currentServoPosition);
@@ -354,7 +354,7 @@ public class MainOpMode extends OpMode {
                             if(detection.ftcPose != null) {
                                 if (Math.abs(detection.ftcPose.bearing) > 5.0) {
                                     currentServoPosition -= 0.05*detection.ftcPose.bearing/1800;
-                                    currentServoPosition = Range.clip(currentServoPosition, 0.0, 1.0);
+                                    currentServoPosition = Range.clip(currentServoPosition, 0.0, 0.4);
                                     rightServo.setPosition(currentServoPosition);
                                     leftServo.setPosition(currentServoPosition);
                                 }
