@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.util.Size;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -38,7 +37,7 @@ public class MainOpMode extends OpMode {
     private short lastTurretRotDir = 0;
     private Servo leftServo, rightServo;
 
-    private ElapsedTime timer = new ElapsedTime(), turretRotationTimer = new ElapsedTime(), lastCall = new ElapsedTime(), lastAprilTagDetection = new ElapsedTime();
+    private ElapsedTime timer = new ElapsedTime(), turretRotationTimer = new ElapsedTime(), lastCall = new ElapsedTime(), lastAprilTagDetection = new ElapsedTime(), lastMoveTimer = new ElapsedTime();
 
     private NormalizedColorSensor colorSensor;
 
@@ -57,6 +56,8 @@ public class MainOpMode extends OpMode {
 
     private final int RED_ALIANCE_GOAL_APRIL_TAG_ID = 24, BLUE_ALIANCE_GOAL_APRIL_TAG_ID = 20;
     private int targetGoalAprilTagID;
+
+    private Pose2d initialPosition = new Pose2d(38, -32);
 
     private double[] rot(double x, double y, double theta) {
         double[] res = new double[2];
@@ -143,8 +144,10 @@ public class MainOpMode extends OpMode {
     public void init_loop(){
         if(gamepad1.x){
             redAliance = false;
+            initialPosition = new Pose2d(38, 33);
         }else if(gamepad1.b){
             redAliance = true;
+            initialPosition = new Pose2d(38, -32);
         }
 
         telemetry.addData("Aliance: " , redAliance ? "red" : "blue");
@@ -159,7 +162,7 @@ public class MainOpMode extends OpMode {
     public void loop(){
         //drivetrain
 
-        Pose2d estimate = drive.getPoseEstimate();
+        /*Pose2d estimate = drive.getPoseEstimate();
 
         Vector2d input = new Vector2d(
                 -gamepad1.left_stick_y,
@@ -170,6 +173,14 @@ public class MainOpMode extends OpMode {
                 new Pose2d(
                         input.getX(),
                         input.getY(),
+                        -gamepad1.right_stick_x
+                )
+        );*/
+
+        drive.setWeightedDrivePower(
+                new Pose2d(
+                        -gamepad1.left_stick_y,
+                        -gamepad1.left_stick_x,
                         -gamepad1.right_stick_x
                 )
         );
@@ -345,7 +356,8 @@ public class MainOpMode extends OpMode {
         }
 
         int i = 0;
-        if(!turretRotated){
+        boolean moved = gamepad1.right_stick_x == 0 && gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0;
+        if(!moved && lastMoveTimer.milliseconds() > 5000 && !drive.isBusy()){
             if(lastAprilTagDetection.milliseconds() >= 50) {
                 List<AprilTagDetection> detections = aprilTag.getFreshDetections();
 
@@ -356,10 +368,12 @@ public class MainOpMode extends OpMode {
                         if(detection.id == targetGoalAprilTagID){
                             if(detection.ftcPose != null) {
                                 if (Math.abs(detection.ftcPose.bearing) > 5.0) {
-                                    currentServoPosition -= 0.05*detection.ftcPose.bearing/1800;
+                                    /*currentServoPosition -= 0.05*detection.ftcPose.bearing/1800;
                                     currentServoPosition = Range.clip(currentServoPosition, 0.0, 0.4);
                                     rightServo.setPosition(currentServoPosition);
-                                    leftServo.setPosition(currentServoPosition);
+                                    leftServo.setPosition(currentServoPosition);*/
+
+                                    drive.turnAsync(0.3*detection.ftcPose.bearing);
                                 }
                             }
                         }
@@ -370,6 +384,9 @@ public class MainOpMode extends OpMode {
             }
         }
 
+        if(moved){
+            lastMoveTimer.reset();
+        }
         List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
 
         ColorBlobLocatorProcessor.Util.filterByCriteria(
