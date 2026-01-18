@@ -333,6 +333,8 @@ public class MainOpMode extends OpMode {
                     intakeServoPosition = 0.6;
                 }
                 intakeMotor.setPower(0);
+            } else if (gamepad1.b) {
+                intakeMotor.setPower(-1.0);
             } else if (!forceIntake){
                 intakeMotor.setPower(0);
             }
@@ -340,7 +342,6 @@ public class MainOpMode extends OpMode {
             if(currentTime - lastUpdateTime > 50) lastUpdateTime = System.currentTimeMillis();
 
         }
-        drive.update();
 
         if(!turretRotated){
             if(lastAprilTagDetection.milliseconds() >= 50) {
@@ -371,6 +372,8 @@ public class MainOpMode extends OpMode {
         ColorBlobLocatorProcessor.Util.filterByCriteria(
                 ColorBlobLocatorProcessor.BlobCriteria.BY_CIRCULARITY,
                 0.6, 1, blobs);
+
+        drive.update();
 
         lastCall.reset();
     }
