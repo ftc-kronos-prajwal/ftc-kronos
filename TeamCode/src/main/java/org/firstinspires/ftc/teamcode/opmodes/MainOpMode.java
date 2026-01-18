@@ -137,6 +137,8 @@ public class MainOpMode extends OpMode {
 
         visionPortal = builder.build();
 
+        visionPortal.close();
+
         lastCall.reset();
     }
 
