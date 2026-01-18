@@ -334,7 +334,7 @@ public class MainOpMode extends OpMode {
                 }
                 intakeMotor.setPower(0);
             } else if (gamepad1.b) {
-                intakeMotor.setPower(-1.0);
+                intakeMotor.setPower(1.0);
             } else if (!forceIntake){
                 intakeMotor.setPower(0);
             }
