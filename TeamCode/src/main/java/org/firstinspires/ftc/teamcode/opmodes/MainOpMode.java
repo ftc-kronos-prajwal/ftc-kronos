@@ -356,8 +356,8 @@ public class MainOpMode extends OpMode {
         }
 
         int i = 0;
-        boolean moved = gamepad1.right_stick_x == 0 && gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0;
-        if(!moved && gamepad1.x && !drive.isBusy()){
+        boolean still = gamepad1.right_stick_x == 0 && gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0;
+        if(still && gamepad1.x && !drive.isBusy()){
             if(lastAprilTagDetection.milliseconds() >= 50) {
                 List<AprilTagDetection> detections = aprilTag.getFreshDetections();
 
@@ -384,7 +384,7 @@ public class MainOpMode extends OpMode {
             }
         }
 
-        if(moved){
+        if(!still){
             lastMoveTimer.reset();
         }
         List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
