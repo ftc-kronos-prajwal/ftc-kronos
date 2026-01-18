@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous
-public class PrajwalAuto extends OpMode {
+public class OldAuto extends OpMode {
     private enum State {
         DRIVE_TO_SHOOT_1,
         SPIN_UP_SHOOTER_1,
