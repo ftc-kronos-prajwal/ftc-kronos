@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -206,8 +207,8 @@ public class MainOpMode extends OpMode {
                     turretRotated = false;
                 }
             }else {
-                currentServoPosition += gamepad1.left_bumper ? (double) -lastCall.nanoseconds() /100000000 : (double) lastCall.nanoseconds() /100000000;
-                currentServoPosition = Math.min(currentServoPosition, Math.max(currentServoPosition, 0.0));
+                currentServoPosition += gamepad1.left_bumper ? (double) lastCall.nanoseconds() /100000000 : (double) -lastCall.nanoseconds() /100000000;
+                currentServoPosition = Range.clip(currentServoPosition, 0.0, 1.0);
 
                 leftServo.setPosition(currentServoPosition);
                 rightServo.setPosition(currentServoPosition);
@@ -351,8 +352,9 @@ public class MainOpMode extends OpMode {
                     for(AprilTagDetection detection : detections){
                         if(detection.id == targetGoalAprilTagID){
                             if(detection.ftcPose != null) {
-                                if (Math.abs(detection.ftcPose.x) > 1) {
-                                    currentServoPosition += detection.ftcPose.x/100;
+                                if (Math.abs(detection.ftcPose.bearing) > 5.0) {
+                                    currentServoPosition -= 0.05*detection.ftcPose.bearing/1800;
+                                    currentServoPosition = Range.clip(currentServoPosition, 0.0, 1.0);
                                     rightServo.setPosition(currentServoPosition);
                                     leftServo.setPosition(currentServoPosition);
                                 }
