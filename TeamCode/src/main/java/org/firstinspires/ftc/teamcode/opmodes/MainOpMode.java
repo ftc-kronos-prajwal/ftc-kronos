@@ -352,7 +352,7 @@ public class MainOpMode extends OpMode {
                 if (detections != null) {
                     for(AprilTagDetection detection : detections){
                         i+=1;
-                        telemetry.addLine(String.format("Detection %d: id %d, name %s, bearing: %f", i, detection.id, detection.metadata.name, detection.ftcPose != null ? detection.ftcPose.bearing : -1.0));
+                        telemetry.addLine(String.format("Detection %d: id %d, name %s, bearing: %f", i, detection.id, detection.metadata != null ? detection.metadata.name : "NULL", detection.ftcPose != null ? detection.ftcPose.bearing : -1.0));
                         if(detection.id == targetGoalAprilTagID){
                             if(detection.ftcPose != null) {
                                 if (Math.abs(detection.ftcPose.bearing) > 5.0) {
