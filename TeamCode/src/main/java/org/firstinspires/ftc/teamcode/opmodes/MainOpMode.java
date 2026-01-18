@@ -344,12 +344,15 @@ public class MainOpMode extends OpMode {
 
         }
 
+        int i = 0;
         if(!turretRotated){
             if(lastAprilTagDetection.milliseconds() >= 50) {
                 List<AprilTagDetection> detections = aprilTag.getFreshDetections();
 
                 if (detections != null) {
                     for(AprilTagDetection detection : detections){
+                        i+=1;
+                        telemetry.addLine(String.format("Detection %d: id %d, name %s, bearing: %f", i, detection.id, detection.metadata.name, detection.ftcPose != null ? detection.ftcPose.bearing : -1.0));
                         if(detection.id == targetGoalAprilTagID){
                             if(detection.ftcPose != null) {
                                 if (Math.abs(detection.ftcPose.bearing) > 5.0) {
@@ -361,6 +364,7 @@ public class MainOpMode extends OpMode {
                             }
                         }
                     }
+                    telemetry.update();
                     lastAprilTagDetection.reset();
                 }
             }
