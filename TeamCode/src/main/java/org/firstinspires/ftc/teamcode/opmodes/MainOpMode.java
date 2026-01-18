@@ -51,7 +51,7 @@ public class MainOpMode extends OpMode {
     private ColorBlobLocatorProcessor colorLocator;
     private VisionPortal visionPortal;
 
-    private double currentServoPosition = 0.0;
+    private double currentServoPosition = 0.2;
 
     private boolean redAliance = false;
 
