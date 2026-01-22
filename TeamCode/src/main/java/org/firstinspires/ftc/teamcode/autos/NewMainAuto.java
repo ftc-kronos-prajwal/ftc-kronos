@@ -34,7 +34,7 @@ public class NewMainAuto extends OpMode {
     public void start() {
         // Start first trajectory when autonomous begins
         TrajectorySequence traj = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-                .forward(4)
+                .forward(7)
                 .build();
         drive.followTrajectorySequenceAsync(traj);
     }
