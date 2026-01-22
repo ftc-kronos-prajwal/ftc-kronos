@@ -15,19 +15,21 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
-        double angle = Math.atan2(58-24, -62+52);
+        double angle = Math.toRadians(135);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(43.32, 43.32, 4.8, Math.toRadians(180), 14.52)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(0, 24, Math.toRadians(180)))
-                        .lineToLinearHeading(new Pose2d(-52, 24, angle))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(-63, 24, Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(-36, 36, angle))
+                        .waitSeconds(1)
+                        .lineToLinearHeading(new Pose2d(-12, 32, Math.toRadians(90)))
+                        .forward(18)
+                        .lineToLinearHeading(new Pose2d(-36, 36, angle))
                         .waitSeconds(1)
                         .lineToLinearHeading(new Pose2d(12, 32, Math.toRadians(90)))
-                        .waitSeconds(1)
                         .forward(18)
-                        .waitSeconds(1)
-                        .lineToLinearHeading(new Pose2d(-52, 24, angle))
+                        .lineToLinearHeading(new Pose2d(-36, 36, angle))
                         .waitSeconds(1)
                         .build());
 

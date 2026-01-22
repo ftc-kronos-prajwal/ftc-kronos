@@ -13,16 +13,27 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.opencv.Circle;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
+import org.opencv.core.Point;
 
 import java.util.List;
 
+class Point3D{
+    public float x, y, z;
+    public Point3D(float x_val, float y_val, float z_val){
+        x = x_val;
+        y = y_val;
+        z = z_val;
+    }
+}
 @TeleOp(name="MainOpMode")
 public class MainOpMode extends OpMode {
     private DcMotor[] motors = new DcMotor[4];
@@ -59,12 +70,24 @@ public class MainOpMode extends OpMode {
 
     private Pose2d initialPosition = new Pose2d(38, -32);
 
+    private float fx, fy, cx, cy;
+
     private double[] rot(double x, double y, double theta) {
         double[] res = new double[2];
         double cos = Math.cos(theta), sin = Math.sin(theta);
         res[0] = x * cos - y * sin;
         res[1] = x * sin + y * cos;
         return res;
+    }
+
+    private Point3D detectionToPose(ColorBlobLocatorProcessor.Blob blob){
+        VectorF ret = new VectorF(0, 0, 0);
+        Circle circle = blob.getCircle();
+        Point center = circle.getCenter();
+
+        float z = fx*5/(circle.getRadius()*2);
+
+        return new Point3D((float) ((center.x-cx)*z/fx), (float) ((center.y-cy)*z/fy), z);
     }
 
     @Override
@@ -398,6 +421,13 @@ public class MainOpMode extends OpMode {
                 ColorBlobLocatorProcessor.BlobCriteria.BY_CIRCULARITY,
                 0.6, 1, blobs);
 
+        i = 0;
+
+        for(ColorBlobLocatorProcessor.Blob blob : blobs){
+            i += 1;
+            Point3D pose = detectionToPose(blob);
+            telemetry.addLine(String.format("detection %d: %f, %f, %f", pose.x, pose.y, pose.z))
+        }
         drive.update();
 
         lastCall.reset();
