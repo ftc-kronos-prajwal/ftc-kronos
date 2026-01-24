@@ -48,7 +48,7 @@ public class MainOpMode extends OpMode {
     private short lastTurretRotDir = 0;
     private Servo leftServo, rightServo;
 
-    private ElapsedTime timer = new ElapsedTime(), turretRotationTimer = new ElapsedTime(), lastCall = new ElapsedTime(), lastAprilTagDetection = new ElapsedTime(), lastMoveTimer = new ElapsedTime();
+    private ElapsedTime timer = new ElapsedTime(), turretRotationTimer = new ElapsedTime(), lastCall = new ElapsedTime(), lastAprilTagDetection = new ElapsedTime(), lastMoveTimer = new ElapsedTime(), lastTurretLaunchTimer = new ElapsedTime();
 
     private NormalizedColorSensor colorSensor;
 
@@ -238,7 +238,7 @@ public class MainOpMode extends OpMode {
                     lastTurretRotLogged = false;
                 }
             }*/
-            if(gamepad1.left_bumper == gamepad1.right_bumper){
+            /*if(gamepad1.left_bumper == gamepad1.right_bumper){
                 if(turretRotationTimer.milliseconds() > 5000) {
                     turretRotated = false;
                 }
@@ -250,6 +250,19 @@ public class MainOpMode extends OpMode {
                 rightServo.setPosition(currentServoPosition);
                 turretRotated = true;
                 turretRotationTimer.reset();
+            }*/
+
+            if(gamepad1.left_bumper){
+                if(lastTurretLaunchTimer.milliseconds() <= 250) {
+                    intakeMotor.setPower(-1.0);
+                    forceIntake = true;
+                }else{
+                    intakeMotor.setPower(0.0);
+                    forceIntake = false;
+                }
+            }else{
+                lastTurretLaunchTimer.reset();
+                forceIntake = false;
             }
 
             turretLaunchMotor.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
@@ -287,7 +300,7 @@ public class MainOpMode extends OpMode {
                 forceIntake = false;
             }*/
 
-            if(Math.abs(gamepad1.right_trigger-gamepad1.left_trigger) >= 0.95){
+            /*if(Math.abs(gamepad1.right_trigger-gamepad1.left_trigger) >= 0.95){
                 if(timer.milliseconds() > 6000){
                     intakeMotor.setPower(0.0);
                 }else if(timer.milliseconds() > 5000){
@@ -305,7 +318,7 @@ public class MainOpMode extends OpMode {
                     kickerMotorPower = 0.0;
                 }
                 forceIntake = false;
-            }
+            }*/
 
             /*Pose2d estimate = drive.getPoseEstimate();
 
@@ -426,7 +439,7 @@ public class MainOpMode extends OpMode {
         for(ColorBlobLocatorProcessor.Blob blob : blobs){
             i += 1;
             Point3D pose = detectionToPose(blob);
-            telemetry.addLine(String.format("detection %d: %f, %f, %f", pose.x, pose.y, pose.z))
+            telemetry.addLine(String.format("detection %d: %f, %f, %f", pose.x, pose.y, pose.z));
         }
         drive.update();
 

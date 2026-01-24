@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+@TeleOp(name="JoystickRumble ")
 public class JoystickRumble extends OpMode {
     double endGameStarttime;
 
